@@ -84,3 +84,4 @@ jobs:
           sudo docker rm ${{ env.NAME }} || true
           sudo docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
           sudo docker run -d -p 80:8080 --name luty-server --restart always ${{ env.DOCKER_IMAGE }}:latest
+
