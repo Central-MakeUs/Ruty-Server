@@ -5,9 +5,13 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: read
+  packages: write
+
 # 환경설정
 env:
-  DOCKER_IMAGE: ghcr.io/${{ github.actor }}/luty-server-deploy
+  DOCKER_IMAGE: ghcr.io/${{ github.repository_owner }}/luty-server-deploy
   VERSION: ${{ github.sha }}
   NAME: luty-server
 
