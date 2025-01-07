@@ -11,7 +11,7 @@ permissions:
 
 # 환경설정
 env:
-  DOCKER_IMAGE: ghcr.io/${{ github.repository_owner }}/luty-server-deploy
+  DOCKER_IMAGE: ghcr.io/${{ github.repository_owner | lower }}/luty-server-deploy
   VERSION: ${{ github.sha }}
   NAME: luty-server
 
