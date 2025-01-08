@@ -93,11 +93,17 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      # 3000 -> 80 포트로 수행하도록 지정
-      - name: Docker run
-        run: |
-          sudo docker stop ${{ env.NAME }} || true
-          sudo docker rm ${{ env.NAME }} || true
-          sudo docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          sudo docker run -d -p 80:8080 --name ruty-server --restart always ${{ env.DOCKER_IMAGE }}:latest
+      # 8000 -> 80 포트로 수행하도록 지정
+#      - name: Docker run
+#        run: |
+#          sudo docker stop ${{ env.NAME }} || true
+#          sudo docker rm ${{ env.NAME }} || true
+#          sudo docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
+#          sudo docker run -d -p 80:8080 --name ruty-server --restart always ${{ env.DOCKER_IMAGE }}:latest
 
+      # 기존 컨테이너 종료 후 새로운 컨테이너 실행
+      - name: Deploy Application
+        run: |
+          docker-compose down || true
+          docker-compose pull || true
+          docker-compose up -d || true
