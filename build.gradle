@@ -18,7 +18,16 @@ repositories {
 }
 
 dependencies {
+    // web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // security
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // jwt
+//    implementation 'io.jsonwebtoken:jjwt-api'
+//    implementation 'io.jsonwebtoken:jjwt-impl'
+//    implementation 'io.jsonwebtoken:jjwt-jackson'
+
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
@@ -31,8 +40,11 @@ dependencies {
     // db(mysql)
     implementation 'mysql:mysql-connector-java:8.0.33'
 
-
+    //test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    testImplementation 'org.springframework.security:spring-security-test'
+
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
