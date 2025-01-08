@@ -1,4 +1,4 @@
-package com.luty.lutyserver;
+package com.ruty.rutyserver;
 
 import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
