@@ -1,8 +1,9 @@
-version: "3.8"
+version: "2.5"
+
 services:
   mysql:
     image: mysql:8.0
-    container_name: mysql-container
+    container_name: ruty-mysql
     restart: always
     environment:
       MYSQL_DATABASE: ruty_db
@@ -13,6 +14,8 @@ services:
       - ./db/conf.d:/etc/mysql/conf.d
     ports:
       - "3307:3306"
+    networks:
+      - app-network
 
   ruty-server:
     image: ghcr.io/central-makeus/ruty-server-deploy:latest
@@ -26,6 +29,13 @@ services:
       - "80:8080"
     depends_on:
       - mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   db_data:
+
