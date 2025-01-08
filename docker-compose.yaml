@@ -15,7 +15,7 @@ services:
       - "3307:3306"
 
   ruty-server:
-    image: ghcr.io/singsangssong/ruty-server-deploy:latest
+    image: ghcr.io/central-makeus/ruty-server-deploy:latest
     container_name: ruty-server
     restart: always
     environment:
