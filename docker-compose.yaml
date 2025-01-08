@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_DATABASE: ruty_db
+      MYSQL_USER: ruty
+      MYSQL_PASSWORD: bunnies
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/conf.d:/etc/mysql/conf.d
+    ports:
+      - "3307:3306"
+
+  ruty-server:
+    image: ghcr.io/singsangssong/ruty-server-deploy:latest
+    container_name: ruty-server
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ruty-db
+      SPRING_DATASOURCE_USERNAME: ruty
+      SPRING_DATASOURCE_PASSWORD: bunnies
+    ports:
+      - "80:8080"
+    depends_on:
+      - mysql
+
+volumes:
+  db_data:
