@@ -11,9 +11,9 @@ permissions:
 
 # 환경설정
 env:
-  DOCKER_IMAGE: ghcr.io/${{ github.repository_owner }}/luty-server-deploy
+  DOCKER_IMAGE: ghcr.io/${{ github.repository_owner }}/ruty-server-deploy
   VERSION: ${{ github.sha }}
-  NAME: luty-server
+  NAME: ruty-server
 
 jobs:
   # 빌드 Job
@@ -45,7 +45,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Set Docker Image Name
-        run: echo "DOCKER_IMAGE=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/luty-server-deploy" >> $GITHUB_ENV
+        run: echo "DOCKER_IMAGE=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/ruty-server-deploy" >> $GITHUB_ENV
 
       - name: Verify DOCKER_IMAGE
         run: echo ${{ env.DOCKER_IMAGE }}
@@ -82,7 +82,7 @@ jobs:
     runs-on: [ self-hosted, label-go ] # AWS ./configure에서 사용할 label명
     steps:
       - name: Set Docker Image Name
-        run: echo "DOCKER_IMAGE=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/luty-server-deploy" >> $GITHUB_ENV
+        run: echo "DOCKER_IMAGE=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/ruty-server-deploy" >> $GITHUB_ENV
 
       - name: Verify DOCKER_IMAGE
         run: echo ${{ env.DOCKER_IMAGE }}
@@ -99,5 +99,5 @@ jobs:
           sudo docker stop ${{ env.NAME }} || true
           sudo docker rm ${{ env.NAME }} || true
           sudo docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          sudo docker run -d -p 80:8080 --name luty-server --restart always ${{ env.DOCKER_IMAGE }}:latest
+          sudo docker run -d -p 80:8080 --name ruty-server --restart always ${{ env.DOCKER_IMAGE }}:latest
 
