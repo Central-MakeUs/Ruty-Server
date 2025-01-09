@@ -8,6 +8,7 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: ruty_db
+      MYSQL_ROOT_PASSWORD: 1234
       MYSQL_USER: ruty
       MYSQL_PASSWORD: bunnies
 #    volumes:
@@ -23,8 +24,11 @@ services:
     platform: linux/amd64
     container_name: ruty-server
     restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://ruty-mysql:3306/ruty-db
+      SPRING_DATASOURCE_URL: jdbc:mysql://ruty-mysql:3306/ruty_db
       SPRING_DATASOURCE_USERNAME: ruty
       SPRING_DATASOURCE_PASSWORD: bunnies
     ports:

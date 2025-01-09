@@ -93,6 +93,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       # 8000 -> 80 포트로 수행하도록 지정
 #      - name: Docker run
 #        run: |
