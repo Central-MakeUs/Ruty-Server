@@ -12,8 +12,8 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ruty_db
-#    url: jdbc:mysql://ruty-mysql:3306/ruty_db
+#    url: jdbc:mysql://localhost:3306/ruty_db
+    url: jdbc:mysql://ruty-mysql:3306/ruty_db
     username: ruty
     password: bunnies
 

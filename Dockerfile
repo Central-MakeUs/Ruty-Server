@@ -11,7 +11,7 @@ COPY build/libs/ruty-server-0.0.1-SNAPSHOT.jar /app/app.jar
 ENV JAVA_OPTS="-Dserver.port=8080"
 ENV PORT=8080
 
-ENV SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/ruty-db
+ENV SPRING_DATASOURCE_URL=jdbc:mysql://ruty-mysql:3306/ruty-db
 ENV SPRING_DATASOURCE_USERNAME=ruty
 ENV SPRING_DATASOURCE_PASSWORD=bunnies
 
