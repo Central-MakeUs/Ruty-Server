@@ -75,11 +75,6 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_IMAGE }}:latest
           context: .
-      # docker-compose 파일을 VM으로 복사
-      - name: Copy docker-compose.yml to VM
-        run: |
-          scp -i ${{ secrets.GCP_PRIVATE_KEY }} ./docker-compose.yaml ${{ env.GCP_USER }}@${{ secrets.GCP_HOST }}:/home/${{ env.GCP_USER }}/
-
 
   # 배포 Job
   deploy:
@@ -100,18 +95,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 8000 -> 80 포트로 수행하도록 지정
-#      - name: Docker run
-#        run: |
-#          sudo docker stop ${{ env.NAME }} || true
-#          sudo docker rm ${{ env.NAME }} || true
-#          sudo docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-#          sudo docker run -d -p 80:8080 --name ruty-server --restart always ${{ env.DOCKER_IMAGE }}:latest
-
-      # 기존 컨테이너 종료 후 새로운 컨테이너 실행
-      - name: Deploy Application
+      # SSH Key 설정
+      - name: Set up SSH Key
         run: |
-          docker-compose down || true
+          echo "${{ secrets.GCP_PRIVATE_KEY }}" > ~/.ssh/ruty-ssh
+          chmod 600 ~/.ssh/ruty-ssh
+
+      # docker-compose 파일을 VM으로 복사
+      - name: Copy docker-compose.yml to VM
+        run: |
+          scp -i ~/.ssh/ruty-ssh ./docker-compose.yaml ${{ env.GCP_USER }}@${{ secrets.GCP_HOST }}:/home/${{ env.GCP_USER }}/
+
+      # 원격에서 Docker Compose 실행
+      - name: Run Docker Compose on VM
+        run: |
+          ssh -i ~/.ssh/ruty-ssh ${{ env.GCP_USER }}@${{ secrets.GCP_HOST }} << EOF
+          cd /home/${{ env.GCP_USER }}
+          docker-compose down --rmi all || true
           docker-compose pull || true
           docker-compose up -d || true
-          docker compose ps
+          docker-compose ps
+          EOF
