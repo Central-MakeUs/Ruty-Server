@@ -78,7 +78,7 @@ jobs:
       # docker-compose 파일을 VM으로 복사
       - name: Copy docker-compose.yml to VM
         run: |
-          scp -i ${{ secrets.GCP_PRIVATE_KEY }} ~/Github/ruty-server/docker-compose.yaml ${{ env.GCP_USER }}@${{ secrets.GCP_HOST }}:/home/${{ env.GCP_USER }}/
+          scp -i ${{ secrets.GCP_PRIVATE_KEY }} ./docker-compose.yaml ${{ env.GCP_USER }}@${{ secrets.GCP_HOST }}:/home/${{ env.GCP_USER }}/
 
 
   # 배포 Job
