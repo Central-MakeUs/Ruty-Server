@@ -1,5 +1,7 @@
 package com.ruty.rutyserver.security.oauth.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ruty.rutyserver.member.Member;
 import com.ruty.rutyserver.member.MemberRepository;
 import com.ruty.rutyserver.security.oauth.dto.common.CustomOAuth2Member;
@@ -17,7 +19,10 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -30,14 +35,23 @@ public class CustomOAuth2MemberService implements OAuth2UserService<OAuth2UserRe
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
-        OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         // 로그인 진행 중인 서비스를 구분
         // 네이버로 로그인 진행 중인지, 구글로 로그인 진행 중인지, ... 등을 구분
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        //Apple의 경우 id_token에 회원정보가 있으므로 회원정보 API 호출과정 생략
+        Map<String, Object> attributes;
+        if(registrationId.contains("apple")){
+            log.info(registrationId);
+            String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
+            attributes = decodeJwtTokenPayload(idToken);
+            attributes.put("id_token", idToken);
+            log.info(idToken);
+        }else{
+            OAuth2User oAuth2User = delegate.loadUser(userRequest);
+            attributes = oAuth2User.getAttributes();
+        }
         SocialType socialType = getSocialType(registrationId);
-        Map<String, Object> attributes = oAuth2User.getAttributes();
-
         // OAuth2 로그인 진행 시 키가 되는 필드 값(Primary Key와 같은 의미)
         // 구글의 경우 기본적으로 코드를 지원
         // 하지만 네이버, 카카오 등은 기본적으로 지원 X
@@ -48,7 +62,7 @@ public class CustomOAuth2MemberService implements OAuth2UserService<OAuth2UserRe
 
         // OAuth2UserService를 통해 가져온 OAuth2User의 attribute 등을 담을 클래스
         // socialtype에 따라 google이나 apple 객체 생성함.
-        OAuthAttributes extractAttributes = OAuthAttributes.of(socialType, userNameAttributeName, oAuth2User.getAttributes());
+        OAuthAttributes extractAttributes = OAuthAttributes.of(socialType, userNameAttributeName, attributes);
 
         // 사용자 저장 또는 업데이트
         Member member = saveOrUpdate(extractAttributes, socialType);
@@ -61,6 +75,26 @@ public class CustomOAuth2MemberService implements OAuth2UserService<OAuth2UserRe
                 member.getEmail(),
                 member.getRole()
         );
+    }
+
+    //JWT Payload부분 decode 메서드
+    public Map<String, Object> decodeJwtTokenPayload(String jwtToken){
+        Map<String, Object> jwtClaims = new HashMap<>();
+        try {
+            String[] parts = jwtToken.split("\\.");
+            Base64.Decoder decoder = Base64.getUrlDecoder();
+
+            byte[] decodedBytes = decoder.decode(parts[1].getBytes(StandardCharsets.UTF_8));
+            String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
+            ObjectMapper mapper = new ObjectMapper();
+
+            Map<String, Object> map = mapper.readValue(decodedString, Map.class);
+            jwtClaims.putAll(map);
+
+        } catch (JsonProcessingException e) {
+            log.error("decodeJwtToken: {}-{} / jwtToken : {}", e.getMessage(), e.getCause(), jwtToken);
+        }
+        return jwtClaims;
     }
 
     private Member saveOrUpdate(OAuthAttributes attributes, SocialType socialType) {

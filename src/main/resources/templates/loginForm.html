@@ -12,5 +12,9 @@
 <div th:if="!${member}">
     <a th:href="@{/oauth2/authorization/google}" class="btn btn-primary me-2 active" role="button">Google Login</a>
 </div>
+
+<div th:if="!${member}">
+    <a th:href="@{/oauth2/authorization/apple}" class="btn btn-primary me-2 active" role="button">Apple Login</a>
+</div>
 </body>
 </html>
