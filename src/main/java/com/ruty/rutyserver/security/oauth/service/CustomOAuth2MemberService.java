@@ -42,11 +42,9 @@ public class CustomOAuth2MemberService implements OAuth2UserService<OAuth2UserRe
         //Apple의 경우 id_token에 회원정보가 있으므로 회원정보 API 호출과정 생략
         Map<String, Object> attributes;
         if(registrationId.contains("apple")){
-            log.info(registrationId);
             String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
             attributes = decodeJwtTokenPayload(idToken);
             attributes.put("id_token", idToken);
-            log.info(idToken);
         }else{
             OAuth2User oAuth2User = delegate.loadUser(userRequest);
             attributes = oAuth2User.getAttributes();
@@ -58,7 +56,7 @@ public class CustomOAuth2MemberService implements OAuth2UserService<OAuth2UserRe
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails()
                 .getUserInfoEndpoint()
-                .getUserNameAttributeName();
+                .getUserNameAttributeName(); // -> apple로 하면 여기가 비어있음.attributes의 sub값 쓰는게 나을듯.
 
         // OAuth2UserService를 통해 가져온 OAuth2User의 attribute 등을 담을 클래스
         // socialtype에 따라 google이나 apple 객체 생성함.
