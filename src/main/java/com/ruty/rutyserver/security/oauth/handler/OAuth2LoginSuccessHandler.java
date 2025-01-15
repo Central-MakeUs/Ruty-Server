@@ -1,7 +1,6 @@
 package com.ruty.rutyserver.security.oauth.handler;
 
 import com.ruty.rutyserver.member.MemberRepository;
-import com.ruty.rutyserver.member.MemberRole;
 import com.ruty.rutyserver.security.jwt.JwtService;
 import com.ruty.rutyserver.security.oauth.dto.common.CustomOAuth2Member;
 import jakarta.servlet.ServletException;
@@ -11,17 +10,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Collection;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
@@ -41,8 +38,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             String refresh = jwtService.createRefreshToken();
             response.addCookie(createCookie("Authorization", access));
             response.addCookie(createCookie("Authorization-refresh", refresh));
-            response.sendRedirect("http://34.59.214.93:8080/auth/googleLogin");
+//            response.sendRedirect("http://34.59.214.93:8080/auth/googleLogin");
             jwtService.updateRefreshToken(oAuth2Member.getEmail(), refresh);
+            getRedirectStrategy().sendRedirect(request, response, "http://34.59.214.93:8080/auth/googleLogin");
 
         } catch (Exception e) {
             throw e;

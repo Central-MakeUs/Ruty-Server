@@ -11,12 +11,12 @@ public class AppleOAuth2MemberInfo extends OAuth2MemberInfo {
 
     @Override
     public String getId() {
-        return null;
+        return (String) attributes.get("sub");
     }
 
     @Override
     public String getNickname() {
-        return null;
+        return (String) attributes.get("name");
     }
 
     @Override
@@ -26,6 +26,6 @@ public class AppleOAuth2MemberInfo extends OAuth2MemberInfo {
 
     @Override
     public String getEmail() {
-        return null;
+        return (String) attributes.get("email");
     }
 }
