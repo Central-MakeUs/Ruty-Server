@@ -11,6 +11,7 @@ import com.ruty.rutyserver.security.oauth.service.CustomOAuth2MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.file.ConfigurationSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -41,6 +43,9 @@ public class SecurityConfig {
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
+
+    @Value("${spring.security.oauth2.client.registration.apple.clientSecret}")
+    private String appleSecretKey;
 
     @Bean
     public JwtFilter jwtFilter() {
@@ -61,7 +66,7 @@ public class SecurityConfig {
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient(){
         DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
-        accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter());
+        accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter(appleSecretKey));
 
         return accessTokenResponseClient;
     }
@@ -74,7 +79,10 @@ public class SecurityConfig {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        configuration.setAllowedOrigins(Arrays.asList(
+                                "http://localhost:3000",
+                                "https://1ed0-123-143-51-138.ngrok-free.app"
+                        ));
                         configuration.setAllowedMethods(Collections.singletonList(">"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -90,7 +98,7 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .headers(header -> header.frameOptions(frameOption -> frameOption.disable()))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/googleLogin").permitAll()
+                        .requestMatchers("**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout.logoutSuccessUrl("/googleLogin"))

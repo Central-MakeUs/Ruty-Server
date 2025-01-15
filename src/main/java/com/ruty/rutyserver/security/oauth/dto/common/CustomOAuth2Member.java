@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 
 /*
@@ -22,7 +23,7 @@ public class CustomOAuth2Member extends DefaultOAuth2User {
     public CustomOAuth2Member(Collection<? extends GrantedAuthority> authorities,
                               Map<String, Object> attributes, String nameAttributeKey,
                               String nickName, String email, MemberRole role) {
-        super(authorities, attributes, nameAttributeKey);
+        super(authorities, attributes, Optional.ofNullable(nameAttributeKey).orElse("sub"));
         this.nickName = nickName;
         this.email = email;
         this.role = role;

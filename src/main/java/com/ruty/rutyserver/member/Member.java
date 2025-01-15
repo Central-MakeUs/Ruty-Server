@@ -23,10 +23,10 @@ public class Member {
     @Column(nullable = true)
     private String nickName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String picture;
 
     @Enumerated(EnumType.STRING)

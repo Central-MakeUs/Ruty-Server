@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Map;
+import java.util.Optional;
 
 // OAuth2의 종류에 따라서 객체를 google의 정보에 혹은 apple의 정보에 맞도록 객체화시킴.
 @Getter
@@ -44,8 +45,9 @@ public class OAuthAttributes {
 
     private static OAuthAttributes ofApple(String usernameAttributeName,
                                            Map<String, Object> attributes) {
+        // apple은 따로 nameAttributeKey값을 구현해줘야함. google은 기본제공?
         return OAuthAttributes.builder()
-                .nameAttributeKey(usernameAttributeName)
+                .nameAttributeKey("sub")
                 .oAuth2MemberInfo(new AppleOAuth2MemberInfo(attributes))
                 .build();
     }
@@ -55,7 +57,9 @@ public class OAuthAttributes {
         return Member.builder()
                 .email(oAuth2MemberInfo.getEmail())
                 .nickName(oAuth2MemberInfo.getNickname())
-                .name(oAuth2MemberInfo.attributes.get("name").toString())
+                .name(Optional.ofNullable(oAuth2MemberInfo.attributes.get("name"))
+                .map(Object::toString)
+                .orElse(null))
                 .picture(oAuth2MemberInfo.getPicture())
                 .role(MemberRole.ROLE_MEMBER)
                 .socialType(socialType)

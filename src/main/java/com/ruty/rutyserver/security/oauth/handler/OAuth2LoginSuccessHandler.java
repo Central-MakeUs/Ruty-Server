@@ -40,7 +40,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             response.addCookie(createCookie("Authorization-refresh", refresh));
 //            response.sendRedirect("http://34.59.214.93:8080/auth/googleLogin");
             jwtService.updateRefreshToken(oAuth2Member.getEmail(), refresh);
-            getRedirectStrategy().sendRedirect(request, response, "http://34.59.214.93:8080/auth/googleLogin");
+//            getRedirectStrategy().sendRedirect(request, response, "http://34.59.214.93:8080/auth/googleLogin");
 
         } catch (Exception e) {
             throw e;
