@@ -1,7 +1,7 @@
 package com.ruty.rutyserver.security.oauth.dto.common;
 
-import com.ruty.rutyserver.member.Member;
-import com.ruty.rutyserver.member.MemberRole;
+import com.ruty.rutyserver.member.entity.Member;
+import com.ruty.rutyserver.member.entity.MemberRole;
 import com.ruty.rutyserver.security.oauth.dto.AppleOAuth2MemberInfo;
 import com.ruty.rutyserver.security.oauth.dto.GoogleOAuth2MemberInfo;
 import lombok.Builder;

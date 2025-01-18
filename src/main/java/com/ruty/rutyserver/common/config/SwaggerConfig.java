@@ -1,55 +1,42 @@
 package com.ruty.rutyserver.common.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
-import java.util.List;
-
-@OpenAPIDefinition(info = @Info(title = "tg-wing 홈페이지", description = "다들 아자아자 화이팅^^", version = "v1"))
 
 @Configuration
-@Profile({"dev", "default"})
 public class SwaggerConfig {
-
     @Bean
-    @Profile("dev")
-    public Server devServer() {
-        Server devServer = new Server();
-        devServer.setDescription("dev");
-        devServer.setUrl("http://ec2-43-200-221-178.ap-northeast-2.compute.amazonaws.com/api");
-        return devServer;
-    }
-
-    @Bean
-    @Profile("default")
-    public Server defaultServer() {
-        return null;
-    }
-
-    @Bean
-    public OpenAPI openAPI(Server server) {
+    public OpenAPI openAPI() {
+        // Security 설정: JWT 기반 인증
         SecurityScheme securityScheme = new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
-                .in(SecurityScheme.In.HEADER).name("Authorization");
+                .type(SecurityScheme.Type.HTTP) // HTTP 기반 인증
+                .scheme("bearer") // bearer 토큰 방식
+                .bearerFormat("JWT") // JWT 형식으로 설정
+                .in(SecurityScheme.In.HEADER) // Authorization 헤더에서 토큰을 받음
+                .name("Authorization"); // 헤더 이름 설정
+
         SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
 
-        OpenAPI openAPI = new OpenAPI()
+        return new OpenAPI()
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
-                .security(Arrays.asList(securityRequirement));
-        if (server != null) {
-            openAPI.servers(List.of(server));
-        }
-
-        return openAPI;
+                .security(Arrays.asList(securityRequirement))
+                .info(apiInfo()) // API 정보 설정
+                .openapi("3.0.0"); // OpenAPI 버전 설정
     }
 
+    private Info apiInfo() {
+        return new Info()
+                .title("Ruty API Docs")
+                .description("Swagger에서는 간편하게 API 테스트를 수행할 수 있도록 구성할 생각이며, API의 특이사항은 이곳에 작성해두겠습니다. " +
+                        "(소셜 로그인은 Swagger에 따로 표시되지 않으니 이곳을 참고해주시면 감사하겠습니다.)")
+                .version("1.0.0");
+    }
 }
