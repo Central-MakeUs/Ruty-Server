@@ -1,4 +1,4 @@
-package com.ruty.rutyserver.member;
+package com.ruty.rutyserver.member.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

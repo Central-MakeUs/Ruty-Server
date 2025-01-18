@@ -1,5 +1,6 @@
-package com.ruty.rutyserver.member;
+package com.ruty.rutyserver.member.entity;
 
+import com.ruty.rutyserver.common.BaseEntity;
 import com.ruty.rutyserver.security.oauth.dto.common.SocialType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,25 +12,26 @@ import lombok.NoArgsConstructor;
 @Table(name = "members")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String email;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 20)
     private String nickName;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 20)
     private String name;
 
     @Column(nullable = true)
     private String picture;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private SocialType socialType;
 
     @Enumerated(EnumType.STRING)
@@ -59,5 +61,9 @@ public class Member {
 
     public void updateToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void signUpNickName(String nickName) {
+        this.nickName = nickName;
     }
 }

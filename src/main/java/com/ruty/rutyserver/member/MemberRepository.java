@@ -1,5 +1,6 @@
 package com.ruty.rutyserver.member;
 
+import com.ruty.rutyserver.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

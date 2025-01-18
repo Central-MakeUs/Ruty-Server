@@ -59,7 +59,7 @@ public class SecurityConfig {
             web.ignoring()
                     .requestMatchers(PathRequest
                             .toStaticResources().atCommonLocations());
-            web.ignoring().requestMatchers("/swagger-ui/*", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/v3/api-docs");
+//            web.ignoring().requestMatchers("/swagger-ui/*", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/v3/api-docs");
         };
     }
 
@@ -81,7 +81,7 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
                         configuration.setAllowedOrigins(Arrays.asList(
                                 "http://localhost:3000",
-                                "https://1ed0-123-143-51-138.ngrok-free.app"
+                                "https://e18f-121-166-16-179.ngrok-free.app"
                         ));
                         configuration.setAllowedMethods(Collections.singletonList(">"));
                         configuration.setAllowCredentials(true);
@@ -98,8 +98,8 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .headers(header -> header.frameOptions(frameOption -> frameOption.disable()))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("**").permitAll()
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/**").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .logout(logout -> logout.logoutSuccessUrl("/googleLogin"))
                 .oauth2Login(oauth -> oauth
