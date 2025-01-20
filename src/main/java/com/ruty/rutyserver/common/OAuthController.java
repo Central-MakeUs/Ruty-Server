@@ -1,4 +1,4 @@
-package com.ruty.rutyserver;
+package com.ruty.rutyserver.common;
 
 import com.ruty.rutyserver.security.oauth.dto.common.SessionMember;
 import jakarta.servlet.http.HttpSession;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/test")
 @Slf4j
 public class OAuthController {
 
@@ -31,9 +31,4 @@ public class OAuthController {
         return "loginForm";
     }
 
-    @GetMapping("/google")
-    public void getGoogleLoginUrl() {
-        log.info("사용자로부터 google oauth 로그인 요청 받음.");
-
-    }
 }

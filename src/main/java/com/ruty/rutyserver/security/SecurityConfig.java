@@ -1,7 +1,6 @@
 package com.ruty.rutyserver.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ruty.rutyserver.member.MemberRepository;
+import com.ruty.rutyserver.member.repository.MemberRepository;
 import com.ruty.rutyserver.security.jwt.JwtFilter;
 import com.ruty.rutyserver.security.jwt.JwtService;
 import com.ruty.rutyserver.security.oauth.converter.CustomRequestEntityConverter;
@@ -10,13 +9,11 @@ import com.ruty.rutyserver.security.oauth.handler.OAuth2LoginSuccessHandler;
 import com.ruty.rutyserver.security.oauth.service.CustomOAuth2MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.file.ConfigurationSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,7 +22,6 @@ import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationC
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;

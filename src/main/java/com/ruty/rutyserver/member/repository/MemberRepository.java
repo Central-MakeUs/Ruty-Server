@@ -1,4 +1,4 @@
-package com.ruty.rutyserver.member;
+package com.ruty.rutyserver.member.repository;
 
 import com.ruty.rutyserver.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

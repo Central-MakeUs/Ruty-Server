@@ -1,4 +1,4 @@
-package com.ruty.rutyserver.security.oauth;
+package com.ruty.rutyserver.security;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

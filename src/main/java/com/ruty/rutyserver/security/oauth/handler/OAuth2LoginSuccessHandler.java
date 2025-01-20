@@ -1,6 +1,6 @@
 package com.ruty.rutyserver.security.oauth.handler;
 
-import com.ruty.rutyserver.member.MemberRepository;
+import com.ruty.rutyserver.member.repository.MemberRepository;
 import com.ruty.rutyserver.security.jwt.JwtService;
 import com.ruty.rutyserver.security.oauth.dto.common.CustomOAuth2Member;
 import jakarta.servlet.ServletException;
@@ -40,7 +40,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             response.addCookie(createCookie("Authorization-refresh", refresh));
 //            response.sendRedirect("http://34.59.214.93:8080/auth/googleLogin");
             jwtService.updateRefreshToken(oAuth2Member.getEmail(), refresh);
-            getRedirectStrategy().sendRedirect(request, response, "http://ssong.store:8080/swagger-ui/index.html");
+            getRedirectStrategy().sendRedirect(request, response, "https://ssong.store/swagger-ui/index.html");
 
         } catch (Exception e) {
             throw e;
