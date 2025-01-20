@@ -1,6 +1,7 @@
-package com.ruty.rutyserver.member;
+package com.ruty.rutyserver.member.controller;
 
 import com.ruty.rutyserver.common.ApiResponse;
+import com.ruty.rutyserver.member.service.MemberService;
 import com.ruty.rutyserver.member.dto.MemberDto;
 import com.ruty.rutyserver.member.dto.MemberInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/member")
+@RequestMapping("/api/member")
 public class MemberController {
 
     private final MemberService memberService;

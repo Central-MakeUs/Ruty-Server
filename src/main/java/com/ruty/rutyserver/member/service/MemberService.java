@@ -1,9 +1,10 @@
-package com.ruty.rutyserver.member;
+package com.ruty.rutyserver.member.service;
 
 import com.ruty.rutyserver.member.dto.MemberDto;
 import com.ruty.rutyserver.member.dto.MemberInfoDto;
 import com.ruty.rutyserver.member.entity.Member;
 import com.ruty.rutyserver.member.exception.MemberNotFoundException;
+import com.ruty.rutyserver.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
