@@ -5,10 +5,12 @@ import com.ruty.rutyserver.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "improvement_goals")
 @Getter
+@NoArgsConstructor
 public class ImprovementGoals extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "improvement_goal_id")

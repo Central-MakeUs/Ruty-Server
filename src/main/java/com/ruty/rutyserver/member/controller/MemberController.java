@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
-@Tag(name = "회원설정 API")
+@Tag(name = "초기 회원설정 API")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -24,8 +24,8 @@ public class MemberController {
     private final MemberService memberService;
 
     @Operation(
-            summary = "닉네임 설정(인증토큰 필요)",
-            description = "소셜 로그인 이후, 사용자가 닉네임을 설정합니다.")
+            summary = "선택약관, 닉네임 설정(인증토큰 필요)",
+            description = "소셜 로그인 이후, 선택약관, 닉네임을 설정합니다.")
     @PutMapping("/sign")
     public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto,
                                     Principal principal) {
@@ -41,13 +41,4 @@ public class MemberController {
         boolean memberAgree = memberService.isMemberAgree(principal.getName());
         return ResponseEntity.ok(ApiResponse.ok(memberAgree));
     }
-
-    @Operation(
-            summary = "회원전체 조회")
-    @GetMapping()
-    public ResponseEntity<?> getAllMembers() {
-        List<MemberInfoDto> memberInfoDtos = memberService.getAllMembers();
-        return ResponseEntity.ok(ApiResponse.ok(memberInfoDtos));
-    }
-
 }

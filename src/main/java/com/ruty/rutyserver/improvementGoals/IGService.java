@@ -13,9 +13,9 @@ public class IGService {
     private final IGRepository igRepository;
 
     public List<ImprovementGoalReq> getAllGoals() {
-        List<ImprovementGoals> allGoals = igRepository.findAll();
-        List<ImprovementGoalReq> reqList = new ArrayList<>();
-        allGoals.stream().map(goal -> reqList.add(ImprovementGoalReq.of(goal)));
-        return reqList;
+        return igRepository.findAll()
+                .stream()
+                .map(ImprovementGoalReq::of)
+                .toList();
     }
 }

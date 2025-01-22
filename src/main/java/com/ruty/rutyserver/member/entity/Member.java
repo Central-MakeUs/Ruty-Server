@@ -1,6 +1,7 @@
 package com.ruty.rutyserver.member.entity;
 
 import com.ruty.rutyserver.common.BaseEntity;
+import com.ruty.rutyserver.member.dto.MemberUpdateDto;
 import com.ruty.rutyserver.security.oauth.dto.common.SocialType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -60,6 +61,13 @@ public class Member extends BaseEntity {
     public Member update(String name, String picture) {
         this.name = name;
         this.picture = picture;
+        return this;
+    }
+
+    public Member updateProfile(MemberUpdateDto memberUpdateDto) {
+        this.nickName = memberUpdateDto.getNickName();
+        this.picture = memberUpdateDto.getPicture();
+        this.isAgree = memberUpdateDto.getIsAgree();
         return this;
     }
 

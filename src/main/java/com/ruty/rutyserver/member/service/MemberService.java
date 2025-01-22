@@ -2,6 +2,7 @@ package com.ruty.rutyserver.member.service;
 
 import com.ruty.rutyserver.member.dto.MemberDto;
 import com.ruty.rutyserver.member.dto.MemberInfoDto;
+import com.ruty.rutyserver.member.dto.MemberUpdateDto;
 import com.ruty.rutyserver.member.entity.Member;
 import com.ruty.rutyserver.member.exception.MemberNotFoundException;
 import com.ruty.rutyserver.member.repository.MemberRepository;
@@ -42,4 +43,27 @@ public class MemberService {
                 .orElseThrow(MemberNotFoundException::new);
         return member.getIsAgree();
     }
+
+    public MemberInfoDto getMyProfile(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+        return MemberInfoDto.of(member);
+    }
+
+    @Transactional
+    public MemberInfoDto updateMyProfile(String email, MemberUpdateDto updateDto) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+        Member updateProfile = member.updateProfile(updateDto);
+        return MemberInfoDto.of(updateProfile);
+    }
+
+    @Transactional
+    public Long deleteMyProfile(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+        memberRepository.deleteById(member.getId());
+        return member.getId();
+    }
+
 }
