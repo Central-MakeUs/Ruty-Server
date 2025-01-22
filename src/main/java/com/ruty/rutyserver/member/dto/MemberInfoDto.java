@@ -14,6 +14,7 @@ public class MemberInfoDto {
     private String nickName;
     private String name;
     private String picture;
+    private Boolean isAgree;
     private SocialType socialType;
     private String refreshToken;
 
@@ -24,8 +25,10 @@ public class MemberInfoDto {
                 .nickName(member.getNickName())
                 .name(member.getName())
                 .picture(member.getPicture())
+                .isAgree(member.getIsAgree())
                 .socialType(member.getSocialType())
                 .refreshToken(member.getRefreshToken())
                 .build();
     }
+
 }

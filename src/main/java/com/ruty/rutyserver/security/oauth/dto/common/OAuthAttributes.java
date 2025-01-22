@@ -58,11 +58,12 @@ public class OAuthAttributes {
                 .email(oAuth2MemberInfo.getEmail())
                 .nickName(oAuth2MemberInfo.getNickname())
                 .name(Optional.ofNullable(oAuth2MemberInfo.attributes.get("name"))
-                .map(Object::toString)
-                .orElse(null))
+                        .map(Object::toString)
+                        .orElse(null))
                 .picture(oAuth2MemberInfo.getPicture())
                 .role(MemberRole.ROLE_MEMBER)
                 .socialType(socialType)
+                .isAgree(null)
                 .build();
 
 //        return User.builder()

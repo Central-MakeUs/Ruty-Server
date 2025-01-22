@@ -1,4 +1,4 @@
-package com.ruty.rutyserver.common.config;
+package com.ruty.rutyserver.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

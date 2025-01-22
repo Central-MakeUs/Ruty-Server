@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
-@Tag(name = "회원 API")
+@Tag(name = "회원설정 API")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -23,17 +23,27 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "소셜 로그인 후, 닉네임 설정")
+    @Operation(
+            summary = "닉네임 설정(인증토큰 필요)",
+            description = "소셜 로그인 이후, 사용자가 닉네임을 설정합니다.")
     @PutMapping("/sign")
-    public ResponseEntity<?> signUpNickName(@RequestBody MemberDto memberDto,
-                                         Principal principal) {
-        log.info("Principal: " + principal.getName());
-        Long memberId = memberService.updateMemberNickname(principal.getName(), memberDto);
-
+    public ResponseEntity<?> signUp(@RequestBody MemberDto memberDto,
+                                    Principal principal) {
+        Long memberId = memberService.signUpMember(principal.getName(), memberDto);
         return ResponseEntity.ok(ApiResponse.updated(memberId));
     }
 
-    @Operation(summary = "회원 전체정보 확인 (paginaction x)")
+    @Operation(
+            summary = "약관동의 조회(인증토큰 필요)",
+            description = "Null만 아니면 필수약관은 동의한 상태임.<br>Null -> 필수약관 동의x<br>true -> 선택약관 동의o<br>false -> 선택약관 동의x")
+    @GetMapping("/isAgree")
+    public ResponseEntity<?> isMemberAgree(Principal principal) {
+        boolean memberAgree = memberService.isMemberAgree(principal.getName());
+        return ResponseEntity.ok(ApiResponse.ok(memberAgree));
+    }
+
+    @Operation(
+            summary = "회원전체 조회")
     @GetMapping()
     public ResponseEntity<?> getAllMembers() {
         List<MemberInfoDto> memberInfoDtos = memberService.getAllMembers();

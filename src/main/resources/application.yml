@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    include: oauth, jwt
+    include: oauth, jwt, openai
 
   application:
     name: ruty-server
@@ -30,5 +30,6 @@ spring:
     generate-ddl: true
     database-platform: org.hibernate.dialect.MySQLDialect
 
-
-
+springdoc:
+  swagger-ui:
+    security

@@ -38,17 +38,21 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private MemberRole role;
 
+    @Column(nullable = true)
+    private Boolean isAgree;
+
     private String refreshToken;
 
     @Builder
     public Member(String email, String nickName,
                   String name, String picture, SocialType socialType,
-                  MemberRole role, String refreshToken) {
+                  Boolean isAgree, MemberRole role, String refreshToken) {
         this.email = email;
         this.name = name;
         this.nickName = nickName;
         this.picture = picture;
         this.role = role;
+        this.isAgree = isAgree;
         this.socialType = socialType;
         this.refreshToken = refreshToken;
     }
@@ -59,11 +63,17 @@ public class Member extends BaseEntity {
         return this;
     }
 
+    public Member signUp(String nickName, boolean isAgree) {
+        this.nickName = nickName;
+        this.isAgree = isAgree;
+        return this;
+    }
+
+    public boolean getIsAgree() {
+        return this.isAgree;
+    }
     public void updateToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
-    public void signUpNickName(String nickName) {
-        this.nickName = nickName;
-    }
 }

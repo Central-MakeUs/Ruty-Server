@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class MemberDto {
-    @NotNull
     private String nickName;
+    private Boolean isAgree;
 }

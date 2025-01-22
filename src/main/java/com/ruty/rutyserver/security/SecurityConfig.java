@@ -97,7 +97,6 @@ public class SecurityConfig {
 //                        .requestMatchers("/**").permitAll()
                         .anyRequest().permitAll()
                 )
-                .logout(logout -> logout.logoutSuccessUrl("/googleLogin"))
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(endpoint -> endpoint.userService(customOAuth2MemberService))
                         .tokenEndpoint(token -> token.accessTokenResponseClient(accessTokenResponseClient()))
