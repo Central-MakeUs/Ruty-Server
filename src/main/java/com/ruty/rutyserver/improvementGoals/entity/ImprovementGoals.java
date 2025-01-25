@@ -1,7 +1,7 @@
-package com.ruty.rutyserver.improvementGoals;
+package com.ruty.rutyserver.improvementGoals.entity;
 
 import com.ruty.rutyserver.common.BaseEntity;
-import com.ruty.rutyserver.member.entity.Member;
+import com.ruty.rutyserver.improvementGoals.entity.Category;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

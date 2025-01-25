@@ -1,4 +1,4 @@
-package com.ruty.rutyserver.improvementGoals;
+package com.ruty.rutyserver.improvementGoals.entity;
 
 
 import lombok.Getter;

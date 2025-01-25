@@ -1,5 +1,6 @@
-package com.ruty.rutyserver.improvementGoals;
+package com.ruty.rutyserver.improvementGoals.dto;
 
+import com.ruty.rutyserver.improvementGoals.entity.ImprovementGoals;
 import lombok.*;
 
 @Data

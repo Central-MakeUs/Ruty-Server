@@ -1,10 +1,10 @@
-package com.ruty.rutyserver.improvementGoals;
+package com.ruty.rutyserver.improvementGoals.service;
 
+import com.ruty.rutyserver.improvementGoals.dto.ImprovementGoalReq;
+import com.ruty.rutyserver.improvementGoals.repository.IGRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -1,6 +1,8 @@
-package com.ruty.rutyserver.improvementGoals;
+package com.ruty.rutyserver.improvementGoals.controller;
 
 import com.ruty.rutyserver.common.ApiResponse;
+import com.ruty.rutyserver.improvementGoals.service.IGService;
+import com.ruty.rutyserver.improvementGoals.dto.ImprovementGoalReq;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
