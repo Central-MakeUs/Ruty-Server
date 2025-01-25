@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    include: oauth, jwt, openai
+    include: oauth, jwt, ai
 
   application:
     name: ruty-server

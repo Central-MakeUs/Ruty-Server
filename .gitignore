@@ -38,6 +38,6 @@ out/
 
 src/main/resources/application-oauth.yml
 src/main/resources/application-jwt.yml
-src/main/resources/application-openai.yml
+src/main/resources/application-ai.yml
 src/main/resources/static/AuthKey_6K9W84675H.p8
 
