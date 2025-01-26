@@ -63,7 +63,6 @@ public class Member extends BaseEntity {
         this.picture = picture;
         return this;
     }
-
     public Member updateProfile(MemberUpdateDto memberUpdateDto) {
         this.nickName = memberUpdateDto.getNickName();
         this.picture = memberUpdateDto.getPicture();
@@ -84,4 +83,7 @@ public class Member extends BaseEntity {
         this.refreshToken = refreshToken;
     }
 
+    public void signUpNickName(String nickName) {
+        this.nickName = nickName;
+    }
 }

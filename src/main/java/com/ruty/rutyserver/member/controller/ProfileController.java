@@ -15,7 +15,7 @@ import java.awt.desktop.PrintFilesEvent;
 import java.security.Principal;
 import java.util.List;
 
-@Tag(name = "프로필 API", description = "jwt 토큰을 기반으로 프로필 조회하기에 토큰 필요함.")
+@Tag(name = "프로필 API", description = "(jwt 토큰을 기반으로 프로필 조회하기에 토큰 필요함.)")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/profile")

@@ -30,5 +30,4 @@ public class MemberInfoDto {
                 .refreshToken(member.getRefreshToken())
                 .build();
     }
-
 }

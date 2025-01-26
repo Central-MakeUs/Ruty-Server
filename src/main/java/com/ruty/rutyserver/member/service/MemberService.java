@@ -26,6 +26,13 @@ public class MemberService {
         member.signUp(memberDto.getNickName(), memberDto.getIsAgree());
         return member.getId();
     }
+    public Long updateMemberNickname(String email, MemberDto memberDto) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        member.signUpNickName(memberDto.getNickName());
+        return member.getId();
+    }
 
     public List<MemberInfoDto> getAllMembers() {
         List<Member> allMembers = memberRepository.findAll();
@@ -65,5 +72,4 @@ public class MemberService {
         memberRepository.deleteById(member.getId());
         return member.getId();
     }
-
 }

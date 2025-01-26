@@ -3,7 +3,6 @@ package com.ruty.rutyserver.member.controller;
 import com.ruty.rutyserver.common.ApiResponse;
 import com.ruty.rutyserver.member.service.MemberService;
 import com.ruty.rutyserver.member.dto.MemberDto;
-import com.ruty.rutyserver.member.dto.MemberInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @Tag(name = "초기 회원설정 API")
 @RestController
