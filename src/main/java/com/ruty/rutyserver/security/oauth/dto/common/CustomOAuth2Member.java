@@ -1,6 +1,6 @@
 package com.ruty.rutyserver.security.oauth.dto.common;
 
-import com.ruty.rutyserver.member.entity.MemberRole;
+import com.ruty.rutyserver.domain.member.entity.MemberRole;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;

@@ -1,6 +1,6 @@
 package com.ruty.rutyserver.security.oauth.dto.common;
 
-import com.ruty.rutyserver.member.entity.Member;
+import com.ruty.rutyserver.domain.member.entity.Member;
 import lombok.Getter;
 
 import java.io.Serializable;

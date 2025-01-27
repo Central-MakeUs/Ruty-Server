@@ -1,6 +1,6 @@
 package com.ruty.rutyserver.security;
 
-import com.ruty.rutyserver.member.repository.MemberRepository;
+import com.ruty.rutyserver.domain.member.repository.MemberRepository;
 import com.ruty.rutyserver.security.jwt.JwtFilter;
 import com.ruty.rutyserver.security.jwt.JwtService;
 import com.ruty.rutyserver.security.oauth.converter.CustomRequestEntityConverter;

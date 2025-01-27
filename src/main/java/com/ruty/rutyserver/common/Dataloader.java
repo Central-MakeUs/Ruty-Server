@@ -1,8 +1,8 @@
 package com.ruty.rutyserver.common;
 
-import com.ruty.rutyserver.improvementGoals.entity.Category;
-import com.ruty.rutyserver.improvementGoals.entity.ImprovementGoals;
-import com.ruty.rutyserver.improvementGoals.repository.IGRepository;
+import com.ruty.rutyserver.domain.improvementGoals.entity.Category;
+import com.ruty.rutyserver.domain.improvementGoals.entity.ImprovementGoals;
+import com.ruty.rutyserver.domain.improvementGoals.repository.IGRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

@@ -1,6 +1,6 @@
 package com.ruty.rutyserver.security.oauth.handler;
 
-import com.ruty.rutyserver.member.repository.MemberRepository;
+import com.ruty.rutyserver.domain.member.repository.MemberRepository;
 import com.ruty.rutyserver.security.jwt.JwtService;
 import com.ruty.rutyserver.security.oauth.dto.common.CustomOAuth2Member;
 import jakarta.servlet.ServletException;
