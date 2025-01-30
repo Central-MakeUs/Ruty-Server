@@ -6,6 +6,12 @@ import com.ruty.rutyserver.domain.member.dto.MemberUpdateDto;
 import com.ruty.rutyserver.domain.member.entity.Member;
 import com.ruty.rutyserver.domain.member.exception.MemberNotFoundException;
 import com.ruty.rutyserver.domain.member.repository.MemberRepository;
+import com.ruty.rutyserver.domain.recommend.RecommendRepository;
+import com.ruty.rutyserver.domain.recommend.RecommendRoutines;
+import com.ruty.rutyserver.domain.recommend.dto.RecommendRoutineDto;
+import com.ruty.rutyserver.domain.routine.RoutineDto;
+import com.ruty.rutyserver.domain.routine.RoutineRepository;
+import com.ruty.rutyserver.domain.routine.Routines;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +23,27 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final RecommendRepository recommendRepository;
+    private final RoutineRepository routineRepository;
+
+    @Transactional
+    public List<RecommendRoutineDto> getMyRecommendRoutines(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        List<RecommendRoutines> recommendByMember = recommendRepository.findAllByMemberId(member.getId());
+        return recommendByMember.stream()
+                .map(RecommendRoutineDto::of)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<RoutineDto> getMyRoutines(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        List<Routines> recommendByMember = routineRepository.findAllByMemberId(member.getId());
+        return recommendByMember.stream()
+                .map(RoutineDto::of)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public Long signUpMember(String email, MemberDto memberDto) {

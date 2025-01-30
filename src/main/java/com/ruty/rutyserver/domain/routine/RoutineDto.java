@@ -24,16 +24,16 @@ public class RoutineDto {
     private Category category;
     private Member member;
 
-    public static RoutineDto fromEntity(Routines routine) {
-        return new RoutineDto(
-                routine.getId(),
-                routine.getTitle(),
-                routine.getDescription(),
-                routine.getWeeks(),
-                routine.getStartDate(),
-                routine.getEndDate(),
-                routine.getCategory(),
-                routine.getMember()
-        );
+    public static RoutineDto of(Routines routine) {
+        return RoutineDto.builder()
+                .routineId(routine.getId())
+                .title(routine.getTitle())
+                .description(routine.getDescription())
+                .weekList(routine.getWeeks())
+                .startDate(routine.getStartDate())
+                .endDate(routine.getEndDate())
+                .category(routine.getCategory())
+                .member(routine.getMember())
+                .build();
     }
 }

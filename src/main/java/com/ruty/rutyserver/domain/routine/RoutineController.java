@@ -17,15 +17,6 @@ import java.util.List;
 public class RoutineController {
     private final RoutineService routineService;
 
-    @Operation(
-            summary = "루틴 저장(인증토큰 필요)",
-            description = "루틴을 저장합니다. 사용자가 새로운 루틴을 만들거나, gpt를 통해 추천받은 루틴을 저장함.")
-    @PostMapping
-    public ResponseEntity<?> saveRoutine(@RequestBody RoutineReq routineReq,
-                                         Principal principal) {
-        Long routineId = routineService.saveRoutine(routineReq, principal.getName());
-        return ResponseEntity.ok(ApiResponse.created(routineId));
-    }
 
     @Operation(
             summary = "루틴 전체조회",

@@ -76,7 +76,7 @@ public class Member extends BaseEntity {
         return this;
     }
 
-    public boolean getIsAgree() {
+    public Boolean getIsAgree() {
         return this.isAgree;
     }
     public void updateToken(String refreshToken) {

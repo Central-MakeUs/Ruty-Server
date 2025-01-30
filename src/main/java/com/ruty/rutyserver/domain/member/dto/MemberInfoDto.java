@@ -25,7 +25,7 @@ public class MemberInfoDto {
                 .nickName(member.getNickName())
                 .name(member.getName())
                 .picture(member.getPicture())
-                .isAgree(member.getIsAgree())
+                .isAgree(member.getIsAgree() != null ? member.getIsAgree() : null)
                 .socialType(member.getSocialType())
                 .refreshToken(member.getRefreshToken())
                 .build();

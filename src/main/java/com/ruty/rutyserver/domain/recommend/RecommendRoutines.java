@@ -5,6 +5,7 @@ import com.ruty.rutyserver.domain.improvementGoals.entity.Category;
 import com.ruty.rutyserver.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,13 @@ public class RecommendRoutines extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Builder
+    public RecommendRoutines(String title, String description,
+                             Category category, Member member) {
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.member = member;
+    }
 }

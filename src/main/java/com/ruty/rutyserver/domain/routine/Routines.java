@@ -28,7 +28,7 @@ public class Routines extends BaseEntity {
 
     private String description;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER) // 루틴 조회할때 대부분 꼭 조회해야하기에 그냥 eager이 나을듯
     @CollectionTable(name = "routine_weeks", joinColumns = @JoinColumn(name = "routines_id"))
     @Enumerated(EnumType.STRING) // Enum 값을 문자열로 저장 (또는 ORDINAL 사용 가능)
     private List<Week> weeks;

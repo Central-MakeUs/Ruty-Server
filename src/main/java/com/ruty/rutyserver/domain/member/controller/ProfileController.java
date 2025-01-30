@@ -4,6 +4,8 @@ import com.ruty.rutyserver.common.ApiResponse;
 import com.ruty.rutyserver.domain.member.dto.MemberInfoDto;
 import com.ruty.rutyserver.domain.member.dto.MemberUpdateDto;
 import com.ruty.rutyserver.domain.member.service.MemberService;
+import com.ruty.rutyserver.domain.recommend.dto.RecommendRoutineDto;
+import com.ruty.rutyserver.domain.routine.RoutineDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,7 @@ import java.util.List;
 public class ProfileController {
     private final MemberService memberService;
 
-    @Operation(summary = "회원 프로필 전체 조회")
+    @Operation(summary = "회원 프로필 전체 조회(개발용)")
     @GetMapping("/all")
     public ResponseEntity<?> getAllMembers() {
         List<MemberInfoDto> memberInfoDtos = memberService.getAllMembers();
@@ -32,6 +34,20 @@ public class ProfileController {
     public ResponseEntity<?> getMyProfile(Principal principal) {
         MemberInfoDto myProfile = memberService.getMyProfile(principal.getName());
         return ResponseEntity.ok(ApiResponse.ok(myProfile));
+    }
+
+    @Operation(summary = "내 추천받은 루틴 보기")
+    @GetMapping("/recommends")
+    public ResponseEntity<?> getMyRecommendRoutines(Principal principal) {
+        List<RecommendRoutineDto> myRecommendRoutines = memberService.getMyRecommendRoutines(principal.getName());
+        return ResponseEntity.ok(ApiResponse.ok(myRecommendRoutines));
+    }
+
+    @Operation(summary = "내 루틴 보기")
+    @GetMapping("/routines")
+    public ResponseEntity<?> getMyRoutines(Principal principal) {
+        List<RoutineDto> myRoutines = memberService.getMyRoutines(principal.getName());
+        return ResponseEntity.ok(ApiResponse.ok(myRoutines));
     }
 
     @Operation(summary = "프로필 수정")

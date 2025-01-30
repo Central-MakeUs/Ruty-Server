@@ -3,6 +3,10 @@ package com.ruty.rutyserver.common;
 import com.ruty.rutyserver.domain.improvementGoals.entity.Category;
 import com.ruty.rutyserver.domain.improvementGoals.entity.ImprovementGoals;
 import com.ruty.rutyserver.domain.improvementGoals.repository.IGRepository;
+import com.ruty.rutyserver.domain.member.entity.Member;
+import com.ruty.rutyserver.domain.member.entity.MemberRole;
+import com.ruty.rutyserver.domain.member.repository.MemberRepository;
+import com.ruty.rutyserver.security.oauth.dto.common.SocialType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +19,8 @@ import java.util.List;
 public class Dataloader {
 
     @Bean
-    public CommandLineRunner loadTestData(IGRepository igRepository) {
+    public CommandLineRunner loadTestData(IGRepository igRepository,
+                                          MemberRepository memberRepository) {
         return args -> {
             // ImprovementGoals 엔티티를 리스트에 추가
             List<ImprovementGoals> goals = List.of(
@@ -30,6 +35,19 @@ public class Dataloader {
             );
             // 리스트를 반복하며 저장
             goals.forEach(igRepository::save);
+
+            Member member = Member.builder()
+                    .email("plmko0914@gmail.com")
+                    .nickName("song")
+                    .name("송성훈")
+                    .picture(null)
+                    .socialType(SocialType.GOOGLE)
+                    .role(MemberRole.ROLE_MEMBER)
+                    .isAgree(true)
+                    .refreshToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJpYXQiOjE3MzgyNDgxMzksImV4cCI6MTczOTQ1NzczOX0.UOnjMkHLblOjvkJhekknanHv90W06K6LKiexNtQtD1c")
+                    .build();
+
+            memberRepository.save(member);
         };
     }
 }
