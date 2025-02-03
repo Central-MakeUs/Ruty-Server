@@ -2,6 +2,7 @@ package com.ruty.rutyserver.domain.member.service;
 
 import com.ruty.rutyserver.domain.member.dto.MemberDto;
 import com.ruty.rutyserver.domain.member.dto.MemberInfoDto;
+import com.ruty.rutyserver.domain.member.dto.MemberLoginDto;
 import com.ruty.rutyserver.domain.member.dto.MemberUpdateDto;
 import com.ruty.rutyserver.domain.member.entity.Member;
 import com.ruty.rutyserver.domain.member.exception.MemberNotFoundException;
@@ -12,11 +13,13 @@ import com.ruty.rutyserver.domain.recommend.dto.RecommendRoutineDto;
 import com.ruty.rutyserver.domain.routine.RoutineDto;
 import com.ruty.rutyserver.domain.routine.RoutineRepository;
 import com.ruty.rutyserver.domain.routine.Routines;
+import com.ruty.rutyserver.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,7 +28,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final RecommendRepository recommendRepository;
     private final RoutineRepository routineRepository;
-
     @Transactional
     public List<RecommendRoutineDto> getMyRecommendRoutines(String email) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
@@ -43,6 +45,13 @@ public class MemberService {
                 .map(RoutineDto::of)
                 .collect(Collectors.toList());
     }
+//
+//    public MemberInfoDto loginGoogle(MemberLoginDto memberLoginDto) {
+//        Optional<Member> isMemberExist = memberRepository.findByEmail(memberLoginDto.getEmail());
+//        if(isMemberExist.isEmpty()) {
+//            Member member = MemberLoginDto.toEntityGoogle(memberLoginDto);
+//        }
+//    }
 
 
     @Transactional

@@ -86,4 +86,5 @@ public class Member extends BaseEntity {
     public void signUpNickName(String nickName) {
         this.nickName = nickName;
     }
+
 }

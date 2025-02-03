@@ -2,6 +2,7 @@ package com.ruty.rutyserver.domain.member.controller;
 
 import com.ruty.rutyserver.common.ApiResponse;
 import com.ruty.rutyserver.domain.member.dto.MemberDto;
+import com.ruty.rutyserver.domain.member.dto.MemberLoginDto;
 import com.ruty.rutyserver.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,4 +40,5 @@ public class MemberController {
         boolean memberAgree = memberService.isMemberAgree(principal.getName());
         return ResponseEntity.ok(ApiResponse.ok(memberAgree));
     }
+
 }
