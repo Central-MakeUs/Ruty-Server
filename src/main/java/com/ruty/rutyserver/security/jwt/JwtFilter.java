@@ -1,7 +1,7 @@
 package com.ruty.rutyserver.security.jwt;
 
-import com.ruty.rutyserver.domain.member.entity.Member;
-import com.ruty.rutyserver.domain.member.repository.MemberRepository;
+import com.ruty.rutyserver.entity.Member;
+import com.ruty.rutyserver.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -2,8 +2,8 @@ package com.ruty.rutyserver.security.oauth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ruty.rutyserver.domain.member.entity.Member;
-import com.ruty.rutyserver.domain.member.repository.MemberRepository;
+import com.ruty.rutyserver.entity.Member;
+import com.ruty.rutyserver.repository.MemberRepository;
 import com.ruty.rutyserver.security.oauth.dto.common.CustomOAuth2Member;
 import com.ruty.rutyserver.security.oauth.dto.common.OAuthAttributes;
 import com.ruty.rutyserver.security.oauth.dto.common.SocialType;

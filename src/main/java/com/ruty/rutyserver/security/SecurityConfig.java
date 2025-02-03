@@ -1,6 +1,6 @@
 package com.ruty.rutyserver.security;
 
-import com.ruty.rutyserver.domain.member.repository.MemberRepository;
+import com.ruty.rutyserver.repository.MemberRepository;
 import com.ruty.rutyserver.security.jwt.JwtFilter;
 import com.ruty.rutyserver.security.jwt.JwtService;
 import com.ruty.rutyserver.security.oauth.converter.CustomRequestEntityConverter;
@@ -26,7 +26,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.security.KeyStore;
 import java.util.Arrays;
 import java.util.Collections;
 

@@ -1,7 +1,7 @@
 package com.ruty.rutyserver.common.exception;
 
-import com.ruty.rutyserver.domain.member.exception.MemberDuplicatedException;
-import com.ruty.rutyserver.domain.member.exception.MemberNotFoundException;
+import com.ruty.rutyserver.exception.MemberDuplicatedException;
+import com.ruty.rutyserver.exception.MemberNotFoundException;
 import org.springframework.http.HttpStatus;
 
 import java.util.LinkedHashMap;

@@ -1,6 +1,6 @@
 package com.ruty.rutyserver.security.jwt;
 
-import com.ruty.rutyserver.domain.member.repository.MemberRepository;
+import com.ruty.rutyserver.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
