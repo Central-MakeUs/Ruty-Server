@@ -48,8 +48,14 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    List<Level> categoriesLevel = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Routine> routines = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<RecommendRoutine> recommendRoutines = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<CategoryLevel> categoriesLevels = new ArrayList<>();
 
     @Builder
     public Member(String email, String nickName,

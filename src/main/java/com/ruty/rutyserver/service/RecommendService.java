@@ -7,6 +7,7 @@ import com.ruty.rutyserver.entity.e.Category;
 import com.ruty.rutyserver.entity.Member;
 import com.ruty.rutyserver.entity.RecommendRoutine;
 import com.ruty.rutyserver.exception.MemberNotFoundException;
+import com.ruty.rutyserver.exception.RecommendNotFoundException;
 import com.ruty.rutyserver.repository.MemberRepository;
 import com.ruty.rutyserver.dto.recommend.GptRequest;
 import com.ruty.rutyserver.dto.recommend.GptResponse;
@@ -39,10 +40,23 @@ public class RecommendService {
     private final RecommendRepository recommendRepository;
     private final MemberRepository memberRepository;
 
-    public List<RecommendRoutineDto> getAllRecommend(String email) {
+    @Transactional
+    public List<RecommendRoutineDto> getMyAllRecommends(String email) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         List<RecommendRoutine> recommendRoutines = recommendRepository.findAllByMemberId(member.getId());
         return recommendRoutines.stream()
+                .map(RecommendRoutineDto::of)
+                .collect(Collectors.toList());
+    }
+
+    public RecommendRoutineDto getMyRecommend(String email, Long recommendId) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        RecommendRoutine recommendRoutine = recommendRepository.findById(recommendId).orElseThrow(RecommendNotFoundException::new);
+        return RecommendRoutineDto.of(recommendRoutine);
+    }
+
+    public List<RecommendRoutineDto> getAllRecommends() {
+        return recommendRepository.findAll().stream()
                 .map(RecommendRoutineDto::of)
                 .collect(Collectors.toList());
     }

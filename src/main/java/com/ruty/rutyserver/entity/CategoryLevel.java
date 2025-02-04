@@ -10,11 +10,11 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
-@Table(name = "category_level")
+@Table(name = "category_levels")
 @NoArgsConstructor
 @DynamicInsert // 자동으로 insert문에 null값을 배제하고 쿼리문을 날려줌.
 @Getter
-public class Level extends BaseEntity {
+public class CategoryLevel extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "level_id")
     private Long id;
@@ -33,7 +33,7 @@ public class Level extends BaseEntity {
     private Member member;
 
     @Builder
-    public Level(Category category, Long level, Long totalPoints, Member member) {
+    public CategoryLevel(Category category, Long level, Long totalPoints, Member member) {
         this.category = category;
         this.level = level;
         this.totalPoints = totalPoints;

@@ -29,7 +29,7 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 // 배포할때는 server주소 지정. -> 아니면 cors에러
-//                .servers(Collections.singletonList(new Server().url("https://ssong.store").description("API Server")))
+                .servers(Collections.singletonList(new Server().url("https://ssong.store").description("API Server")))
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
                 .security(Arrays.asList(securityRequirement))
                 .info(apiInfo()) // API 정보 설정
@@ -39,8 +39,9 @@ public class SwaggerConfig {
     private Info apiInfo() {
         return new Info()
                 .title("Ruty API Docs")
-                .description("Swagger에서는 간편하게 API 테스트를 수행할 수 있도록 구성할 생각이며, API의 특이사항은 이곳에 작성해두겠습니다. " +
-                        "(소셜 로그인은 Swagger에 따로 표시되지 않으니 이곳을 참고해주시면 감사하겠습니다.)")
+                .description("Swagger에서는 간편하게 API 테스트를 수행할 수 있도록 구성할 생각이며, API의 특이사항은 이곳에 작성해두겠습니다." +
+                        "<br>모든 요청이 토큰을 기반으로 동작하기에 테스트하실때 꼭 토큰을 추가해주세요." +
+                        "<br>(소셜 로그인은 Swagger에 따로 표시되지 않으니 이곳을 참고해주시면 감사하겠습니다.)")
                 .version("1.0.0");
     }
 }

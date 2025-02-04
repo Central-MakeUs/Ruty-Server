@@ -1,19 +1,15 @@
 package com.ruty.rutyserver.service;
 
-import com.ruty.rutyserver.dto.member.MemberInfoDto;
-import com.ruty.rutyserver.dto.routine.CategoryLevelDto;
-import com.ruty.rutyserver.dto.routine.TodayRoutineDto;
-import com.ruty.rutyserver.entity.Level;
+import com.ruty.rutyserver.dto.routine.*;
+import com.ruty.rutyserver.entity.CategoryLevel;
 import com.ruty.rutyserver.entity.Member;
 import com.ruty.rutyserver.entity.e.Week;
 import com.ruty.rutyserver.exception.MemberNotFoundException;
 import com.ruty.rutyserver.exception.RoutineNotFoundException;
-import com.ruty.rutyserver.repository.LevelRepository;
+import com.ruty.rutyserver.repository.CategoryLevelRepository;
 import com.ruty.rutyserver.repository.MemberRepository;
 import com.ruty.rutyserver.repository.RecommendRepository;
-import com.ruty.rutyserver.dto.routine.RoutineDto;
 import com.ruty.rutyserver.repository.RoutineRepository;
-import com.ruty.rutyserver.dto.routine.RoutineReq;
 import com.ruty.rutyserver.entity.Routine;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +27,13 @@ public class RoutineService {
     private final RoutineRepository routineRepository;
     private final MemberRepository memberRepository;
     private final RecommendRepository recommendRepository;
-    private final LevelRepository levelRepository;
+    private final CategoryLevelRepository categoryLevelRepository;
+
+    public List<CategoryLevelInfoDto> getAllCategoryLevels() {
+        return categoryLevelRepository.findAll().stream()
+                .map(CategoryLevelInfoDto::of)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public Long saveRoutine(Long recommendId, RoutineReq routineReq, String email) {
@@ -49,6 +51,17 @@ public class RoutineService {
                 .toList(); // 최종 리스트로 변환
     }
 
+    @Transactional
+    public Long updateRoutine(Long routineId, RoutineReq updateRoutine, String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Routine previousRoutine = routineRepository.findById(routineId).orElseThrow(RoutineNotFoundException::new);
+        previousRoutine.updateRoutine(updateRoutine);
+        return previousRoutine.getId();
+    }
+
+    public void deleteRoutine(Long routineId) {
+        routineRepository.deleteById(routineId);
+    }
 
     @Transactional
     public CategoryLevelDto toggleRoutineStatus(Long routineId, String email) {
@@ -56,8 +69,8 @@ public class RoutineService {
         Routine routine = routineRepository.findById(routineId).orElseThrow(RoutineNotFoundException::new);
         routine.setIsDone(!routine.getIsDone());
 
-        List<Level> categoryLevels = member.getCategoriesLevel();
-        for(Level categoryLevel : categoryLevels) {
+        List<CategoryLevel> categoryLevels = member.getCategoriesLevels();
+        for(CategoryLevel categoryLevel : categoryLevels) {
             if(categoryLevel.getCategory().getValue().equals(routine.getCategory().getValue())) {
                 Long level = categoryLevel.getLevel();
                 Long totalPoints = categoryLevel.getTotalPoints();
@@ -108,10 +121,26 @@ public class RoutineService {
 
     public List<CategoryLevelDto> getMyCategoryLevel(String email) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-        List<Level> categoryLevels = levelRepository.findAllByMemberId(member.getId());
+        List<CategoryLevel> categoryLevels = categoryLevelRepository.findAllByMemberId(member.getId());
         return categoryLevels.stream()
                 .map(CategoryLevelDto::of)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<RoutineDto> getMyAllRoutines(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        List<Routine> recommendByMember = routineRepository.findAllByMemberId(member.getId());
+        return recommendByMember.stream()
+                .map(RoutineDto::of)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Long saveCustomRoutine(String email, RoutineReq routineReq) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Routine routine = Routine.toEntity(routineReq, member);
+        return routineRepository.save(routine).getId();
     }
 
     private Long getRequiredPoints(Long level) {

@@ -34,14 +34,7 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public List<RoutineDto> getMyRoutines(String email) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-        List<Routine> recommendByMember = routineRepository.findAllByMemberId(member.getId());
-        return recommendByMember.stream()
-                .map(RoutineDto::of)
-                .collect(Collectors.toList());
-    }
+
 //
 //    public MemberInfoDto loginGoogle(MemberLoginDto memberLoginDto) {
 //        Optional<Member> isMemberExist = memberRepository.findByEmail(memberLoginDto.getEmail());

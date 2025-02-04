@@ -25,7 +25,7 @@ public class RecommendRoutine extends BaseEntity {
     @Column(nullable = false)
     private Category category;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

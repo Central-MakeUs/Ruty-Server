@@ -15,39 +15,18 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
-@Tag(name = "프로필 API", description = "(jwt 토큰을 기반으로 프로필 조회하기에 토큰 필요함.)")
+@Tag(name = "프로필 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/profile")
 public class ProfileController {
     private final MemberService memberService;
 
-    @Operation(summary = "회원 프로필 전체 조회(개발용)")
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllMembers() {
-        List<MemberInfoDto> memberInfoDtos = memberService.getAllMembers();
-        return ResponseEntity.ok(ApiResponse.ok(memberInfoDtos));
-    }
-
     @Operation(summary = "프로필 조회")
     @GetMapping
     public ResponseEntity<?> getMyProfile(Principal principal) {
         MemberInfoDto myProfile = memberService.getMyProfile(principal.getName());
         return ResponseEntity.ok(ApiResponse.ok(myProfile));
-    }
-
-    @Operation(summary = "내 추천받은 루틴 보기")
-    @GetMapping("/recommends")
-    public ResponseEntity<?> getMyRecommendRoutines(Principal principal) {
-        List<RecommendRoutineDto> myRecommendRoutines = memberService.getMyRecommendRoutines(principal.getName());
-        return ResponseEntity.ok(ApiResponse.ok(myRecommendRoutines));
-    }
-
-    @Operation(summary = "내 루틴 보기")
-    @GetMapping("/routines")
-    public ResponseEntity<?> getMyRoutines(Principal principal) {
-        List<RoutineDto> myRoutines = memberService.getMyRoutines(principal.getName());
-        return ResponseEntity.ok(ApiResponse.ok(myRoutines));
     }
 
     @Operation(summary = "프로필 수정")

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "improvement_goals")
 @Getter
 @NoArgsConstructor
-public class ImprovementGoals extends BaseEntity {
+public class ImprovementGoal extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "improvement_goal_id")
     private Long id;
@@ -24,7 +24,7 @@ public class ImprovementGoals extends BaseEntity {
     private String content;
 
     @Builder
-    public ImprovementGoals(Category category, String content) {
+    public ImprovementGoal(Category category, String content) {
         this.category = category;
         this.content = content;
     }

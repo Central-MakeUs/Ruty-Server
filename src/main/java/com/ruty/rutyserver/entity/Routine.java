@@ -54,7 +54,7 @@ public class Routine extends BaseEntity {
     @ColumnDefault("false")
     private Boolean isDone;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -85,5 +85,15 @@ public class Routine extends BaseEntity {
                 .category(req.getCategory())
                 .member(member)
                 .build();
+    }
+
+    // 수정중..
+    public void updateRoutine(RoutineReq updateRoutine) {
+        this.title = updateRoutine.getTitle();
+        this.description = updateRoutine.getDescription();
+        this.weeks = updateRoutine.getWeekList();
+        // 시작일은 고정. 종료일만 변경됨.
+        this.endDate = startDate.plusMonths(updateRoutine.getMonth());
+        this.category = updateRoutine.getCategory();
     }
 }

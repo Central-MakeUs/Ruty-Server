@@ -8,18 +8,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
 @Builder
-public class CategoryLevelDto {
+@NoArgsConstructor @AllArgsConstructor
+public class CategoryLevelInfoDto {
+    private Long id;
     private Category category;
     private Long level;
     private Long totalPoints;
+    private Long memberId;
 
-    public static CategoryLevelDto of(CategoryLevel level) {
-        return CategoryLevelDto.builder()
+    public static CategoryLevelInfoDto of(CategoryLevel level) {
+        return CategoryLevelInfoDto.builder()
+                .id(level.getId())
                 .category(level.getCategory())
                 .level(level.getLevel())
                 .totalPoints(level.getTotalPoints())
+                .memberId(level.getMember().getId())
                 .build();
     }
 }

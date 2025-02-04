@@ -43,7 +43,7 @@ public class CustomOAuth2MemberService implements OAuth2UserService<OAuth2UserRe
             String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
             attributes = decodeJwtTokenPayload(idToken);
             attributes.put("id_token", idToken);
-        }else{
+        } else{
             OAuth2User oAuth2User = delegate.loadUser(userRequest);
             attributes = oAuth2User.getAttributes();
         }
