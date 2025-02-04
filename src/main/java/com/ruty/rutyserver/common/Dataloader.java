@@ -1,10 +1,12 @@
 package com.ruty.rutyserver.common;
 
+import com.ruty.rutyserver.entity.Level;
 import com.ruty.rutyserver.entity.e.Category;
 import com.ruty.rutyserver.entity.ImprovementGoals;
 import com.ruty.rutyserver.repository.IGRepository;
 import com.ruty.rutyserver.entity.Member;
 import com.ruty.rutyserver.entity.e.MemberRole;
+import com.ruty.rutyserver.repository.LevelRepository;
 import com.ruty.rutyserver.repository.MemberRepository;
 import com.ruty.rutyserver.security.oauth.dto.common.SocialType;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,8 @@ public class Dataloader {
 
     @Bean
     public CommandLineRunner loadTestData(IGRepository igRepository,
-                                          MemberRepository memberRepository) {
+                                          MemberRepository memberRepository,
+                                          LevelRepository levelRepository) {
         return args -> {
             // ImprovementGoals 엔티티를 리스트에 추가
             List<ImprovementGoals> goals = List.of(
@@ -46,6 +49,16 @@ public class Dataloader {
                     .isAgree(true)
                     .refreshToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJpYXQiOjE3MzgyNDgxMzksImV4cCI6MTczOTQ1NzczOX0.UOnjMkHLblOjvkJhekknanHv90W06K6LKiexNtQtD1c")
                     .build();
+
+
+            List<Level> levels = List.of(
+                    Level.builder().category(Category.HOUSE).member(member).build(),
+                    Level.builder().category(Category.LEISURE).member(member).build(),
+                    Level.builder().category(Category.SELFCARE).member(member).build(),
+                    Level.builder().category(Category.MONEY).member(member).build()
+            );
+
+            member.getCategoriesLevel().addAll(levels);
 
             memberRepository.save(member);
         };

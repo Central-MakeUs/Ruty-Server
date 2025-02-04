@@ -1,5 +1,7 @@
 package com.ruty.rutyserver.dto.routine;
 
+import com.ruty.rutyserver.dto.member.MemberDto;
+import com.ruty.rutyserver.dto.member.MemberInfoDto;
 import com.ruty.rutyserver.entity.e.Category;
 import com.ruty.rutyserver.entity.Member;
 import com.ruty.rutyserver.entity.Routine;
@@ -24,9 +26,10 @@ public class RoutineDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private Category category;
-    private Member member;
+    private MemberInfoDto memberInfoDto;
 
     public static RoutineDto of(Routine routine) {
+        MemberInfoDto member = MemberInfoDto.of(routine.getMember());
         return RoutineDto.builder()
                 .routineId(routine.getId())
                 .title(routine.getTitle())
@@ -35,7 +38,7 @@ public class RoutineDto {
                 .startDate(routine.getStartDate())
                 .endDate(routine.getEndDate())
                 .category(routine.getCategory())
-                .member(routine.getMember())
+                .memberInfoDto(member)
                 .build();
     }
 }

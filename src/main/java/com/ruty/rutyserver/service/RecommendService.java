@@ -39,6 +39,14 @@ public class RecommendService {
     private final RecommendRepository recommendRepository;
     private final MemberRepository memberRepository;
 
+    public List<RecommendRoutineDto> getAllRecommend(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        List<RecommendRoutine> recommendRoutines = recommendRepository.findAllByMemberId(member.getId());
+        return recommendRoutines.stream()
+                .map(RecommendRoutineDto::of)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public List<RecommendRoutineDto> getGptResponse(String prompt, String email) {
         GptRequest request = new GptRequest(model, prompt);

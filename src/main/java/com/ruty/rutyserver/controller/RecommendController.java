@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
-@Tag(name = "루틴추천 API")
+@Tag(name = "추천루틴 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/recommend")
@@ -36,11 +36,18 @@ public class RecommendController {
             summary = "추천받은 루틴 저장(인증토큰 필요)",
             description = "추천받은 루틴을 저장합니다. gpt를 통해 추천받은 루틴을 저장한다.<br><br>PathVariable: 추천받은 루틴의 pk값")
     @PostMapping("/{recommendId}")
-    public ResponseEntity<?> saveRecommendRoutine(@PathVariable(name = "recommendId") Long recommendId,
-                                         @RequestBody RoutineReq routineReq,
-                                         Principal principal) {
+    public ResponseEntity<?> saveRecommendRoutine(
+            @PathVariable(name = "recommendId") Long recommendId,
+            @RequestBody RoutineReq routineReq,
+            Principal principal) {
         Long routineId = routineService.saveRoutine(recommendId, routineReq, principal.getName());
         return ResponseEntity.ok(ApiResponse.created(routineId));
     }
 
+    @Operation(summary = "나의 추천받은 루틴 전체보기")
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllRecommend(Principal principal) {
+        List<RecommendRoutineDto> recommendRoutineDtos = recommendService.getAllRecommend(principal.getName());
+        return ResponseEntity.ok(ApiResponse.ok(recommendRoutineDtos));
+    }
 }

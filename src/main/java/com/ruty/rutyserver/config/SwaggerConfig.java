@@ -29,7 +29,7 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 // 배포할때는 server주소 지정. -> 아니면 cors에러
-                .servers(Collections.singletonList(new Server().url("https://ssong.store").description("API Server")))
+//                .servers(Collections.singletonList(new Server().url("https://ssong.store").description("API Server")))
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
                 .security(Arrays.asList(securityRequirement))
                 .info(apiInfo()) // API 정보 설정

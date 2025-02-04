@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "members")
 @Getter
@@ -44,6 +47,9 @@ public class Member extends BaseEntity {
     private Boolean isAgree;
 
     private String refreshToken;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    List<Level> categoriesLevel = new ArrayList<>();
 
     @Builder
     public Member(String email, String nickName,

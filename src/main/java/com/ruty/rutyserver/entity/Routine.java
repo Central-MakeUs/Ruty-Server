@@ -9,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +20,14 @@ import java.util.List;
 @Table(name = "routines")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 public class Routine extends BaseEntity {
+
+    @PrePersist
+    public void prePersist() {
+        this.isDone = this.isDone == null ? false : this.isDone;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "routines_id")
@@ -41,9 +50,17 @@ public class Routine extends BaseEntity {
 
     private LocalDate endDate;
 
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private Boolean isDone;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void setIsDone(Boolean isDone) {
+        this.isDone = isDone;
+    }
 
     @Builder
     public Routine(String title, String description, List<Week> weeks,
