@@ -106,6 +106,8 @@ public class SecurityConfig {
                 .addFilterAfter(jwtFilter(), OAuth2LoginAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+                //
+
         return http.build();
     }
 
