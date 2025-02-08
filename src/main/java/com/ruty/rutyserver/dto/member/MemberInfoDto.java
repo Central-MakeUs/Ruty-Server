@@ -1,7 +1,7 @@
 package com.ruty.rutyserver.dto.member;
 
 import com.ruty.rutyserver.entity.Member;
-import com.ruty.rutyserver.security.oauth.dto.common.SocialType;
+import com.ruty.rutyserver.entity.e.SocialType;
 import lombok.*;
 
 @Getter

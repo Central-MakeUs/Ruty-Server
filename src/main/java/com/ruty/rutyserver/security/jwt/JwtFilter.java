@@ -21,12 +21,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
-
     private static final String NO_CHECK_URL = "/login";
-
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
-
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override

@@ -3,10 +3,6 @@ package com.ruty.rutyserver.security;
 import com.ruty.rutyserver.repository.MemberRepository;
 import com.ruty.rutyserver.security.jwt.JwtFilter;
 import com.ruty.rutyserver.security.jwt.JwtService;
-import com.ruty.rutyserver.security.oauth.converter.CustomRequestEntityConverter;
-import com.ruty.rutyserver.security.oauth.handler.OAuth2LoginFailureHandler;
-import com.ruty.rutyserver.security.oauth.handler.OAuth2LoginSuccessHandler;
-import com.ruty.rutyserver.security.oauth.service.CustomOAuth2MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,11 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -34,9 +27,6 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomOAuth2MemberService customOAuth2MemberService;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
 
@@ -57,14 +47,6 @@ public class SecurityConfig {
                             .toStaticResources().atCommonLocations());
 //            web.ignoring().requestMatchers("/swagger-ui/*", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/v3/api-docs");
         };
-    }
-
-    @Bean
-    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient(){
-        DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
-        accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter(appleSecretKey));
-
-        return accessTokenResponseClient;
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -97,13 +79,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/member/**", "/api/dev/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(oauth -> oauth
-                        .userInfoEndpoint(endpoint -> endpoint.userService(customOAuth2MemberService))
-                        .tokenEndpoint(token -> token.accessTokenResponseClient(accessTokenResponseClient()))
-                        .successHandler(oAuth2LoginSuccessHandler)
-                        .failureHandler(oAuth2LoginFailureHandler)
-                )
-                .addFilterAfter(jwtFilter(), OAuth2LoginAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
                 //

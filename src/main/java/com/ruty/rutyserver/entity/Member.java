@@ -3,7 +3,7 @@ package com.ruty.rutyserver.entity;
 import com.ruty.rutyserver.common.BaseEntity;
 import com.ruty.rutyserver.dto.member.MemberUpdateDto;
 import com.ruty.rutyserver.entity.e.MemberRole;
-import com.ruty.rutyserver.security.oauth.dto.common.SocialType;
+import com.ruty.rutyserver.entity.e.SocialType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
