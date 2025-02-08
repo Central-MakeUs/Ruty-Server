@@ -41,6 +41,7 @@ public class CustomRequestEntityConverter implements
         RequestEntity<?> entity = defaultConverter.convert(request);
         String registrationId = request.getClientRegistration().getRegistrationId();
         MultiValueMap<String, String> params = (MultiValueMap<String,String>) entity.getBody();
+
         if (params != null) {
             for (Map.Entry<String, List<String>> entry : params.entrySet()) {
                 String key = entry.getKey();

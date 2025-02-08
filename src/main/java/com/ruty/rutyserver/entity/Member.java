@@ -54,8 +54,8 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<RecommendRoutine> recommendRoutines = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    List<CategoryLevel> categoriesLevels = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CategoryLevel> categoriesLevels = new ArrayList<>();
 
     @Builder
     public Member(String email, String nickName,

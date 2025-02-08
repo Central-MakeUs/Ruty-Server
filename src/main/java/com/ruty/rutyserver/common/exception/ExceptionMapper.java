@@ -1,9 +1,6 @@
 package com.ruty.rutyserver.common.exception;
 
-import com.ruty.rutyserver.exception.MemberDuplicatedException;
-import com.ruty.rutyserver.exception.MemberNotFoundException;
-import com.ruty.rutyserver.exception.RecommendNotFoundException;
-import com.ruty.rutyserver.exception.RoutineNotFoundException;
+import com.ruty.rutyserver.exception.*;
 import org.springframework.http.HttpStatus;
 
 import java.util.LinkedHashMap;
@@ -17,6 +14,7 @@ public class ExceptionMapper { // 예외 객체 -> 예외 상태로 바꿔주는
         setUpMemberException();
         setUpRoutineException();
         setUpRecommendException();
+        setUpJwtException();
     }
 
     private static void setUpMemberException() {
@@ -32,6 +30,10 @@ public class ExceptionMapper { // 예외 객체 -> 예외 상태로 바꿔주는
     private static void setUpRecommendException() {
         mapper.put(RecommendNotFoundException.class,
                 ExceptionSituation.of("해당 추천루틴은 존재하지 않습니다.", HttpStatus.NOT_FOUND, 3000));
+    }
+    private static void setUpJwtException() {
+        mapper.put(JwtException.class,
+                ExceptionSituation.of("로그인 토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST, 7000));
     }
     public static ExceptionSituation getSituationOf(Exception exception) {
         return mapper.get(exception.getClass());

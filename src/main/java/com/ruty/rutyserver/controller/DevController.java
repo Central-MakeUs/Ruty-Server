@@ -3,13 +3,11 @@ package com.ruty.rutyserver.controller;
 import com.ruty.rutyserver.common.ApiResponse;
 import com.ruty.rutyserver.dto.member.MemberInfoDto;
 import com.ruty.rutyserver.dto.recommend.RecommendRoutineDto;
-import com.ruty.rutyserver.dto.routine.CategoryLevelDto;
 import com.ruty.rutyserver.dto.routine.CategoryLevelInfoDto;
 import com.ruty.rutyserver.dto.routine.RoutineDto;
-import com.ruty.rutyserver.entity.CategoryLevel;
-import com.ruty.rutyserver.service.MemberService;
-import com.ruty.rutyserver.service.RecommendService;
-import com.ruty.rutyserver.service.RoutineService;
+import com.ruty.rutyserver.service.MemberServiceImpl;
+import com.ruty.rutyserver.service.RecommendServiceImpl;
+import com.ruty.rutyserver.service.RoutineServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +24,9 @@ import java.util.List;
 @RequestMapping("/api/dev")
 public class DevController {
 
-    private final RecommendService recommendService;
-    private final RoutineService routineService;
-    private final MemberService memberService;
+    private final RecommendServiceImpl recommendService;
+    private final RoutineServiceImpl routineService;
+    private final MemberServiceImpl memberService;
 
     @Operation(summary = "추천받은 루틴 전체 조회")
     @GetMapping("/recommends")

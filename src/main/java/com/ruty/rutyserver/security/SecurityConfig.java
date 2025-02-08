@@ -94,14 +94,15 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .headers(header -> header.frameOptions(frameOption -> frameOption.disable()))
                 .authorizeHttpRequests(request -> request
-//                        .requestMatchers("/**").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/member/**", "/api/dev/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(endpoint -> endpoint.userService(customOAuth2MemberService))
                         .tokenEndpoint(token -> token.accessTokenResponseClient(accessTokenResponseClient()))
                         .successHandler(oAuth2LoginSuccessHandler)
-                        .failureHandler(oAuth2LoginFailureHandler))
+                        .failureHandler(oAuth2LoginFailureHandler)
+                )
                 .addFilterAfter(jwtFilter(), OAuth2LoginAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
