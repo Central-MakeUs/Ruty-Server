@@ -30,7 +30,7 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
 
-    @Value("${spring.security.oauth2.client.registration.apple.clientSecret}")
+    @Value("${spring.security.oauth2.client.registration.apple.client-secret}")
     private String appleSecretKey;
 
     @Bean
@@ -76,13 +76,11 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .headers(header -> header.frameOptions(frameOption -> frameOption.disable()))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/member/**", "/api/dev/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/dev/**", "/login/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-                //
 
         return http.build();
     }

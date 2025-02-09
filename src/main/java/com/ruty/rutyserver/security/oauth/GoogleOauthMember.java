@@ -20,20 +20,19 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class GoogleOauthMember implements OauthMember {
-    private final MemberRepository memberRepository;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private static final String GOOGLE_TOKEN_URI = "https://oauth2.googleapis.com/token";
     private static final String GOOGLE_USER_INFO_URI = "https://www.googleapis.com/oauth2/v2/userinfo";
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private static String googleClientId;
+    private String googleClientId;
 
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private static String googleClientSecret;
+    private String googleClientSecret;
 
     @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
-    private static String googleRedirectUri;
+    private String googleRedirectUri;
 
     @Override
     public String getAccessToken(SocialType socialType, String code) {
@@ -48,9 +47,9 @@ public class GoogleOauthMember implements OauthMember {
         params.add("redirect_uri", googleRedirectUri);
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
-        String tokenUri = GOOGLE_TOKEN_URI;
 
-        ResponseEntity<String> response = restTemplate.postForEntity(tokenUri, entity, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(GOOGLE_TOKEN_URI, entity, String.class);
+
         try {
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
             return jsonNode.get("access_token").asText();
@@ -74,14 +73,4 @@ public class GoogleOauthMember implements OauthMember {
         }
     }
 
-    @Override
-    public String saveOrUpdateMember(Map<String, Object> memberInfo, String provider) {
-        String email = (String) memberInfo.get("email");
-        String name = (String) memberInfo.get("name");
-
-        Member member = memberRepository.findByEmail(email)
-                .orElseGet(() -> memberRepository.save(new Member(email, name, provider)));
-
-        return JwtService.generateToken(member);
-    }
 }

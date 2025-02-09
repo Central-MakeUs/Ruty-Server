@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -123,7 +124,7 @@ public class JwtFilter extends OncePerRequestFilter {
      */
     public void saveAuthentication(Member member) {
 
-        UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
+        UserDetails userDetailsUser = User.builder()
                 .username(member.getEmail())
                 .password("temppassword")
                 .roles(member.getRole().getKey())
