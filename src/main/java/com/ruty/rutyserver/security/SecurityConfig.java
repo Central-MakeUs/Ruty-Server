@@ -76,8 +76,9 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .headers(header -> header.frameOptions(frameOption -> frameOption.disable()))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/auth/**", "/api/dev/**", "/login/**").permitAll()
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/api/auth/**", "/api/dev/**", "/login/**").permitAll()
+//                        .anyRequest().authenticated()
+                        .requestMatchers("/**").permitAll()
                 )
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

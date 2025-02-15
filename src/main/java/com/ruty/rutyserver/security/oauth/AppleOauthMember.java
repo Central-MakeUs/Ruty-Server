@@ -57,7 +57,7 @@ public class AppleOauthMember implements OauthMember{
         String clientSecret = createAppleClientSecret();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("client_id", appleClientId);
+        params.add("client_id", "com.jaySeong.Ruty");
         params.add("client_secret", clientSecret);
         params.add("code", code);
         params.add("grant_type", "authorization_code");
@@ -126,7 +126,7 @@ public class AppleOauthMember implements OauthMember{
                     .setHeaderParam(JwsHeader.KEY_ID, appleKeyId)
                     .setIssuer(appleTeamId)
                     .setAudience("https://appleid.apple.com")
-                    .setSubject(appleClientId)
+                    .setSubject("com.jaySeong.Ruty")
                     .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 5)))
                     .setIssuedAt(new Date(System.currentTimeMillis()))
                     .signWith(privateKey, Jwts.SIG.ES256)
