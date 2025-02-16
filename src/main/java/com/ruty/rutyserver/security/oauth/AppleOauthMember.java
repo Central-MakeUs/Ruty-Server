@@ -34,9 +34,8 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class AppleOauthMember implements OauthMember{
+public class AppleOauthMember{
     private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
 
 //    private static final String APPLE_TOKEN_URI = "https://appleid.apple.com/auth/token";
     private static final String APPLE_AUTHORIZATION_URI = "https://appleid.apple.com/auth/authorize?response_mode=form_post";
@@ -51,7 +50,6 @@ public class AppleOauthMember implements OauthMember{
     @Value("${spring.security.oauth2.client.registration.apple.redirect-uri}")
     private String appleRedirectUri;
 
-    @Override
     public String getAccessToken(SocialType socialType, String code) {
 
         String clientSecret = createAppleClientSecret();
@@ -83,7 +81,7 @@ public class AppleOauthMember implements OauthMember{
 
         return (String) appleToken.get("id_token");
     }
-    @Override
+
     public Map<String, Object> getMemberInfo(String provider, String idToken) {
         String[] jwtParts = idToken.split("\\.");
         if (jwtParts.length < 2) {

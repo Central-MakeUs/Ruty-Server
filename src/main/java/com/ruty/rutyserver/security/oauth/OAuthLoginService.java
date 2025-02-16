@@ -1,6 +1,7 @@
 package com.ruty.rutyserver.security.oauth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.ruty.rutyserver.entity.Member;
 import com.ruty.rutyserver.entity.e.MemberRole;
 import com.ruty.rutyserver.entity.e.SocialType;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,9 +28,10 @@ public class OAuthLoginService {
     private final JwtService jwtService;
     private final Map<String, Boolean> codeProcessed = new HashMap<>();  // 새로운 코드 처리 여부를 추적
 
-    public JwtDto loginSocial(String source, String code) {
-        if (codeProcessed.getOrDefault(code, false)) {
-            log.info("이미 처리된 code: " + code);
+    public JwtDto loginSocial(String source, SocialLoginDto socialLoginDto)
+            throws GeneralSecurityException, IOException {
+        if (codeProcessed.getOrDefault(socialLoginDto.getCode(), false)) {
+            log.info("이미 처리된 code: " + socialLoginDto.getCode());
             return null;  // 이미 처리된 code라면 null 반환
         }
 
@@ -36,18 +40,18 @@ public class OAuthLoginService {
         String resourceServerAccessToken;
         Map<String, Object> memberInfo;
         if(socialType.equals(SocialType.GOOGLE)) {
-            resourceServerAccessToken = googleOauthMember.getAccessToken(socialType, code);
-            memberInfo = googleOauthMember.getMemberInfo(socialType.getValue(), resourceServerAccessToken);
+            memberInfo = googleOauthMember.getAccessToken(socialType, socialLoginDto.getPlatformType(), socialLoginDto.getCode());
         } else {
-            resourceServerAccessToken = appleOauthMember.getAccessToken(socialType, code);
+            resourceServerAccessToken = appleOauthMember.getAccessToken(socialType, socialLoginDto.getCode());
             memberInfo = appleOauthMember.getMemberInfo(socialType.getValue(), resourceServerAccessToken);
         }
 
         // 로그인 성공 시 코드 처리 완료로 설정
-        codeProcessed.put(code, true);
+        codeProcessed.put(socialLoginDto.getCode(), true);
 
         return saveOrUpdateMember(memberInfo, socialType.getValue());
     }
+
 
     private JwtDto saveOrUpdateMember(Map<String, Object> memberInfo, String provider) {
         String email = (String) memberInfo.get("email");
