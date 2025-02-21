@@ -3,7 +3,7 @@ package com.ruty.rutyserver.controller;
 import com.ruty.rutyserver.common.ApiResponse;
 import com.ruty.rutyserver.dto.member.MemberDto;
 import com.ruty.rutyserver.security.jwt.JwtUtil;
-import com.ruty.rutyserver.service.MemberServiceImpl;
+import com.ruty.rutyserver.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/member")
 public class MemberController {
 
-    private final MemberServiceImpl memberService;
+    private final MemberService memberService;
 
     @Operation(
             summary = "선택약관, 닉네임 정보 저장",
@@ -36,8 +36,23 @@ public class MemberController {
     @GetMapping("/isAgree")
     public ResponseEntity<?> isMemberAgree() {
         String email = JwtUtil.getLoginMemberEmail();
-        boolean memberAgree = memberService.isMemberAgree(email);
+        Boolean memberAgree = memberService.isMemberAgree(email);
         return ResponseEntity.ok(ApiResponse.ok(memberAgree));
     }
 
+    @Operation(summary = "회원 카테고리별 레벨 생성")
+    @PostMapping("/category")
+    public ResponseEntity<?> createMemberCategory() {
+        String email = JwtUtil.getLoginMemberEmail();
+        memberService.createMemberCategory(email);
+        return ResponseEntity.ok(ApiResponse.created(null));
+    }
+
+
+    @Operation( summary = "로그아웃하기")
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        String email = JwtUtil.getLoginMemberEmail();
+        return null;
+    }
 }

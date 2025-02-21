@@ -1,6 +1,8 @@
 package com.ruty.rutyserver.security.jwt;
 
 import com.ruty.rutyserver.exception.JwtException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,4 +27,13 @@ public class JwtUtil {
 
         return null;
     }
+
+//    public static String getJwtToken() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication == null || authentication.getPrincipal() == null) {
+//            throw new JwtException();
+//        }
+//
+//    }
 }

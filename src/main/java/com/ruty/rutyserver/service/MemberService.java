@@ -20,11 +20,13 @@ public interface MemberService {
     Long updateMemberNickname(String email, MemberDto memberDto);
     List<MemberInfoDto> getAllMembers();
 
-    boolean isMemberAgree(String email);
+    Boolean isMemberAgree(String email);
 
     MemberInfoDto getMyProfile(String email);
 
     MemberInfoDto updateMyProfile(String email, MemberUpdateDto updateDto);
 
-    Long deleteMyProfile(String email);
+    Long deleteMyProfile(String email, String code);
+
+    void createMemberCategory(String email);
 }

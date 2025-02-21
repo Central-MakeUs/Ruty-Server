@@ -5,13 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Builder
 @NoArgsConstructor @AllArgsConstructor
-public class AppleTokenResponse {
-    private String accessToken;
-    private String tokenType;
-    private String expiresIn;
-    private String refreshToken;
-    private String idToken;
+@Data
+public class AppleRevokeRequest {
+    private String clientId;
+    private String clientSecret;
+    private String token;
+    private String tokenTypeHint;
 }

@@ -38,10 +38,10 @@ public class ProfileController {
 
     @Operation(summary = "프로필 삭제(회원 탈퇴)")
     @DeleteMapping
-    public ResponseEntity<?> deleteMyProfile() {
+    public ResponseEntity<?> deleteMyProfile(@RequestParam(name = "code", defaultValue = "google") String code) {
         String email = JwtUtil.getLoginMemberEmail();
 
-        Long memberId = memberService.deleteMyProfile(email);
+        Long memberId = memberService.deleteMyProfile(email, code);
         return ResponseEntity.ok(ApiResponse.delete(memberId));
     }
 }

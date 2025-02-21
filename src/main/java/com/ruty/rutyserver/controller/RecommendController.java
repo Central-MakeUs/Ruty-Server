@@ -28,7 +28,6 @@ public class RecommendController {
     @GetMapping
     public ResponseEntity<?> chat(@RequestParam(name = "prompt") String prompt){
         String email = JwtUtil.getLoginMemberEmail();
-
         List<RecommendRoutineDto> gptResponse = recommendService.getGptResponse(prompt, email);
         return ResponseEntity.ok(ApiResponse.created(gptResponse));
     }

@@ -2,8 +2,8 @@ jwt:
   secretKey: songseonghuncandoanythingiwanttocompletethisprojectdonotlazyalldaysingsangssongbunniesfighting
 
   access:
-#    expiration: 1800000 # 30분
     expiration: 1800000000 # 30분
+#    expiration: 18000000000 # 3시간
     header: Authorization
 
   refresh:

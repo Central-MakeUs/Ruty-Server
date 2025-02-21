@@ -37,9 +37,9 @@ import java.util.Map;
 public class AppleOauthMember{
     private final RestTemplate restTemplate;
 
-//    private static final String APPLE_TOKEN_URI = "https://appleid.apple.com/auth/token";
     private static final String APPLE_AUTHORIZATION_URI = "https://appleid.apple.com/auth/authorize?response_mode=form_post";
     private static final String APPLE_TOKEN_URI = "https://appleid.apple.com/auth/oauth2/v2/token";
+    private static final String APPLE_REVOKE_URI = "https://appleid.apple.com/auth/revoke";
 
     @Value("${spring.security.oauth2.client.registration.apple.client-id}")
     private String appleClientId;
@@ -53,6 +53,8 @@ public class AppleOauthMember{
     public String getAccessToken(SocialType socialType, String code) {
 
         String clientSecret = createAppleClientSecret();
+
+        log.info("code = " + code);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("client_id", "com.jaySeong.Ruty");
@@ -98,6 +100,32 @@ public class AppleOauthMember{
             throw new RuntimeException("Failed to parse Apple ID Token", e);
         }
     }
+
+    public void revokeMember(String accessToken) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.add("client_id", appleClientId);
+            params.add("client_secret", createAppleClientSecret());
+            params.add("token", accessToken);
+            params.add("token_type_hint", "access_token");
+
+            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+            ResponseEntity<String> response = restTemplate.exchange(APPLE_REVOKE_URI, HttpMethod.POST, request, String.class);
+
+            log.info("Apple Token Revoke Response: {}", response.getBody());
+
+            if (response.getStatusCode() != HttpStatus.OK) {
+                throw new RuntimeException("애플 계정 탈퇴 실패 - 응답 코드: " + response.getStatusCode());
+            }
+
+        } catch (Exception e) {
+            log.error("애플 계정 탈퇴 중 오류 발생: {}", e.getMessage(), e);
+            throw new RuntimeException("애플 계정 탈퇴 실패", e);
+        }
+    }
     private String createAppleClientSecret() {
         String clientSecret = "";
         //application-oauth.yml에 설정해놓은 apple secret Key를 /를 기준으로 split
@@ -124,9 +152,9 @@ public class AppleOauthMember{
                     .setHeaderParam(JwsHeader.KEY_ID, appleKeyId)
                     .setIssuer(appleTeamId)
                     .setAudience("https://appleid.apple.com")
-                    .setSubject("com.jaySeong.Ruty")
-                    .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 5)))
+                    .setSubject(appleClientId)
                     .setIssuedAt(new Date(System.currentTimeMillis()))
+                    .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 5)))
                     .signWith(privateKey, Jwts.SIG.ES256)
                     .compact();
         } catch (IOException e) {
