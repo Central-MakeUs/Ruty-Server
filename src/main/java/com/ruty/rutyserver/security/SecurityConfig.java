@@ -30,9 +30,31 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
 
-    @Value("${spring.security.oauth2.client.registration.apple.client-secret}")
-    private String appleSecretKey;
+    private static final String[] PERMIT_URL_ARRAY = {
+            // permit uri
+            "/login/**",
 
+            /* swagger v2 */
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui/swagger-ui-standalone-preset.js",
+            "/swagger-ui/swagger-initializer.js",
+            "/swagger-ui/swagger-ui-bundle.js",
+            "/swagger-ui/swagger-ui.css",
+            "/swagger-ui/index.css",
+            "/swagger-ui/favicon-32x32.png",
+            "/swagger-ui/favicon-16x16.png",
+            "/api-docs/json/swagger-config",
+            "/api-docs/json"
+    };
     @Bean
     public JwtFilter jwtFilter() {
         JwtFilter jwtFilter = new JwtFilter(jwtService, memberRepository);
@@ -45,7 +67,7 @@ public class SecurityConfig {
             web.ignoring()
                     .requestMatchers(PathRequest
                             .toStaticResources().atCommonLocations());
-//            web.ignoring().requestMatchers("/swagger-ui/*", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/v3/api-docs");
+            web.ignoring().requestMatchers("/swagger-ui/*", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/v3/api-docs");
         };
     }
     @Bean
@@ -76,9 +98,9 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .headers(header -> header.frameOptions(frameOption -> frameOption.disable()))
                 .authorizeHttpRequests(request -> request
-//                        .requestMatchers("/api/auth/**", "/api/dev/**", "/login/**").permitAll()
-//                        .anyRequest().authenticated()
-                        .requestMatchers("/**").permitAll()
+                                .requestMatchers(PERMIT_URL_ARRAY).permitAll()
+                                .anyRequest().authenticated()
+//                        .requestMatchers("/**").permitAll()
                 )
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
