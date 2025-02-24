@@ -65,7 +65,6 @@ public class OAuthLoginService {
         // 토큰값에 접근하기
         // payload에서 토큰 만료시간 현재 시간으로 바꾸기
         // 반환하기 및
-
     }
 
     private JwtDto saveOrUpdateMember(Map<String, Object> memberInfo, String provider) {
@@ -84,20 +83,23 @@ public class OAuthLoginService {
                             .role(MemberRole.ROLE_MEMBER)
                             .refreshToken(refreshToken)
                             .build();
+
+                    List<CategoryLevel> levels = List.of(
+                            CategoryLevel.builder().category(Category.HOUSE).member(newMember).build(),
+                            CategoryLevel.builder().category(Category.LEISURE).member(newMember).build(),
+                            CategoryLevel.builder().category(Category.SELFCARE).member(newMember).build(),
+                            CategoryLevel.builder().category(Category.MONEY).member(newMember).build()
+                    );
+
+                    newMember.getCategoriesLevels().addAll(levels);
+
                     return memberRepository.save(newMember); // DB에 저장
                 });
 
         // 영속 상태 보장된 member에서 categoriesLevels 가져오기
-        member = memberRepository.findById(member.getId()).orElseThrow(MemberNotFoundException::new);
+//        member = memberRepository.findById(member.getId()).orElseThrow(MemberNotFoundException::new);
 
-        List<CategoryLevel> levels = List.of(
-                CategoryLevel.builder().category(Category.HOUSE).member(member).build(),
-                CategoryLevel.builder().category(Category.LEISURE).member(member).build(),
-                CategoryLevel.builder().category(Category.SELFCARE).member(member).build(),
-                CategoryLevel.builder().category(Category.MONEY).member(member).build()
-        );
 
-        member.getCategoriesLevels().addAll(levels);
 
         return new JwtDto(accessToken, refreshToken);
     }

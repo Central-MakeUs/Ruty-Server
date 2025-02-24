@@ -97,7 +97,7 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(MemberNotFoundException::new);
         memberRepository.deleteById(member.getId());
 
-        if(code != "google") {
+        if(!code.equals("google")) {
             String accessToken = appleOauthMember.getAccessToken(SocialType.APPLE, code);
             appleOauthMember.revokeMember(accessToken);
         }
