@@ -1,47 +1,48 @@
-version: "2.5"
+version: '3.8'
 
 services:
+
   mysql:
     image: mysql:8.0.33
     platform: linux/amd64
     container_name: ruty-mysql
     restart: always
+    ports:
+      - 3306:3306 # 배포된 환경에서는 3306:3306
     environment:
       MYSQL_DATABASE: ruty_db
-      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: sung0914
       MYSQL_USER: ruty
       MYSQL_PASSWORD: bunnies
-#    volumes:
-#      - db_data:/var/lib/mysql
-#      - ./db/conf.d:/etc/mysql/conf.d
-    ports:
-      - "3307:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql # mysql의 데이터 raw상태. 현재 서버폴더를 루트로 기준으로 생성됨. 이거 git에 commit되면 안됨...
+      - ./mysql/config:/etc/mysql/conf.d #
+      - ./mysql/init:/docker-entrypoint-initdb.d
     networks:
-      - app-network
-
-  ruty-server:
-    image: ghcr.io/central-makeus/ruty-server-deploy:latest
-    platform: linux/amd64
-    container_name: ruty-server
-    restart: always
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://ruty-mysql:3306/ruty_db
-      SPRING_DATASOURCE_USERNAME: ruty
-      SPRING_DATASOURCE_PASSWORD: bunnies
+      - testnet
+  redis:
+    container_name: ruty-redis
+    image: redis
     ports:
-      - "80:8080"
+      - 6379:6379
+    restart: always
+    networks:
+      - testnet
+
+  backend:
+    container_name: ruty-server
+    image: singsangssong/ruty
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    restart: always
     depends_on:
       - mysql
+      - redis
     networks:
-      - app-network
+      - testnet
 
 networks:
-  app-network:
+  testnet:
     driver: bridge
-
-volumes:
-  db_data:
-

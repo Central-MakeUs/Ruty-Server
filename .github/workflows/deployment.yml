@@ -3,18 +3,16 @@ name: CI/CD Docker
 # 트리거를 수행할 브랜치를 지정합니다.
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
+
+# 환경설정
+#env:
+#  DOCKER_IMAGE: ghcr.io/${{ github.actor }}/spring-auto-deploy
+#  VERSION: ${{ github.sha }}
+#  NAME: go_cicd
 
 permissions:
   contents: read
-  packages: write
-
-# 환경설정
-env:
-  DOCKER_IMAGE: ghcr.io/${{ github.repository_owner }}/ruty-server-deploy
-  VERSION: ${{ github.sha }}
-  NAME: ruty-server
-  GCP_USER: gcptest0914
 
 jobs:
   # 빌드 Job
@@ -23,96 +21,112 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # github repository에서 checkout
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
       # Set up JDK
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: 'temurin'
 
-      # Build JAR file with Gradle
+      # application-database.yml 파일 생성
+      # GitHub-Actions 에서 설정한 값을 application-database.yml 파일에 쓰기
+      - name: make application-jwt.yml
+        run: |
+          cd ./src/main/resources
+          touch ./application-jwt.yml
+          echo "${{ secrets.DATABASE }}" >> ./application-database.yml
+        shell: bash
+
+      # Build 파일 생성하기
       - name: Build with Gradle
-        run: ./gradlew clean build
+        run: |
+          chmod +x gradlew
+          ./gradlew clean bootJar
 
-      # 디버깅: JAR 파일 확인
-      - name: Check JAR file
-        run: ls -al build/libs/
+      - name: DockerFile build & push
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
 
-      # docker build 수행
-      - name: Set up docker buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Set Docker Image Name
-        run: echo "DOCKER_IMAGE=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/ruty-server-deploy" >> $GITHUB_ENV
-
-      - name: Verify DOCKER_IMAGE
-        run: echo ${{ env.DOCKER_IMAGE }}
-
-      - name: Cache docker layers
-        uses: actions/cache@v2
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy all containers to GCP
+        uses: appleboy/ssh-action@master
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ env.VERSION }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
+          key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            set -e
+            sudo docker-compose down || true
+            sudo docker rm -f $(sudo docker ps -aq) || true
+            
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
+            cd ~
+            sudo docker-compose up -d
+            sudo docker image prune -f
 
-      # GitHub 컨테이너 레지스트리에 로그인 후 빌드 & 푸시
-      - name: Login to ghcr
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.CICD_TOKEN }}
-
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          push: true
-          tags: ${{ env.DOCKER_IMAGE }}:latest
-          context: .
+  #
+  #
+  #      # 디버깅: JAR 파일 확인
+  #      - name: Check JAR file
+  #        run: ls -al build/libs/
+  #
+  #      # docker build 수행
+  #      - name: Set up docker buildx
+  #        id: buildx
+  #        uses: docker/setup-buildx-action@v1
+  #
+  #      - name: Cache docker layers
+  #        uses: actions/cache@v2
+  #        with:
+  #          path: /tmp/.buildx-cache
+  #          key: ${{ runner.os }}-buildx-${{ env.VERSION }}
+  #          restore-keys: |
+  #            ${{ runner.os }}-buildx-
+  #
+  #      # GitHub 컨테이너 레지스트리에 로그인 후 빌드 & 푸시
+  #      - name: Login to ghcr
+  #        uses: docker/login-action@v1
+  #        with:
+  #          registry: ghcr.io
+  #          username: ${{ github.repository_owner }}
+  #          password: ${{ secrets.GITHUB_TOKEN }}
+  #
+  #      - name: Build and push
+  #        id: docker_build
+  #        uses: docker/build-push-action@v2
+  #        with:
+  #          builder: ${{ steps.buildx.outputs.name }}
+  #          push: true
+  #          tags: ${{ env.DOCKER_IMAGE }}:latest
+  #          context: .
 
   # 배포 Job
-  deploy:
-    needs: build  # build 후에 실행되도록 정의
-    name: Deploy
-    runs-on: [ self-hosted, label-go ] # AWS ./configure에서 사용할 label명
-    steps:
-      - name: Set Docker Image Name
-        run: echo "DOCKER_IMAGE=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/ruty-server-deploy" >> $GITHUB_ENV
-
-      - name: Verify DOCKER_IMAGE
-        run: echo ${{ env.DOCKER_IMAGE }}
-
-      - name: Login to ghcr
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.CICD_TOKEN }}
-
-      # SSH Key 설정
-      - name: Set up SSH Key
-        run: |
-          echo "${{ secrets.GCP_PRIVATE_KEY }}" > ~/.ssh/ruty-ssh
-          chmod 600 ~/.ssh/ruty-ssh
-
-      # docker-compose 파일을 VM으로 복사
-      - name: Copy docker-compose.yml to VM
-        run: |
-          scp -i ~/.ssh/ruty-ssh ./docker-compose.yaml ${{ env.GCP_USER }}@${{ secrets.GCP_HOST }}:/home/${{ env.GCP_USER }}/
-
-      # 원격에서 Docker Compose 실행
-      - name: Run Docker Compose on VM
-        run: |
-          ssh -i ~/.ssh/ruty-ssh ${{ env.GCP_USER }}@${{ secrets.GCP_HOST }} << EOF
-          cd /home/${{ env.GCP_USER }}
-          docker-compose down --rmi all || true
-          docker-compose pull || true
-          docker-compose up -d || true
-          docker-compose ps
-          EOF
+#  deploy:
+#    needs: build  # build 후에 실행되도록 정의
+#    name: Deploy
+#    runs-on: [ self-hosted, label-go ] # AWS ./configure에서 사용할 label명
+#    steps:
+#      - name: Login to ghcr
+#        uses: docker/login-action@v1
+#        with:
+#          registry: ghcr.io
+#          username: ${{ github.repository_owner }}
+#          password: ${{ secrets.GITHUB_TOKEN }}
+#      # 3000 -> 80 포트로 수행하도록 지정
+#      - name: Docker run
+#        run: |
+#          sudo docker stop ${{ env.NAME }} || true
+#          sudo docker rm ${{ env.NAME }} || true
+#          sudo docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
+#          sudo docker run -d -p 80:8080 --name go_cicd --restart always ${{ env.DOCKER_IMAGE }}:latest
