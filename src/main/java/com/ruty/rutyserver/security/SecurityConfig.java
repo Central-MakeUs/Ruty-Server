@@ -1,6 +1,8 @@
 package com.ruty.rutyserver.security;
 
 import com.ruty.rutyserver.repository.MemberRepository;
+import com.ruty.rutyserver.security.handler.JwtAccessDeniedHandler;
+import com.ruty.rutyserver.security.handler.JwtAuthenticationEntryPoint;
 import com.ruty.rutyserver.security.jwt.JwtFilter;
 import com.ruty.rutyserver.security.jwt.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,10 +31,13 @@ public class SecurityConfig {
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     private static final String[] PERMIT_URL_ARRAY = {
             // permit uri
             "/login/**",
+            "/api/goal",
 
             /* swagger v2 */
             "/v2/api-docs",
@@ -103,6 +108,9 @@ public class SecurityConfig {
 //                        .requestMatchers("/**").permitAll()
                 )
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
+                        .authenticationEntryPoint(authenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
