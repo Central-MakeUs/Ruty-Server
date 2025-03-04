@@ -3,9 +3,12 @@ package com.ruty.rutyserver.service;
 import com.ruty.rutyserver.dto.routine.*;
 import com.ruty.rutyserver.entity.CategoryLevel;
 import com.ruty.rutyserver.entity.Member;
+import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.RoutineProgress;
 import com.ruty.rutyserver.entity.e.Week;
 import com.ruty.rutyserver.exception.MemberNotFoundException;
 import com.ruty.rutyserver.exception.RoutineNotFoundException;
+import com.ruty.rutyserver.exception.RoutineProgressException;
 import com.ruty.rutyserver.repository.CategoryLevelRepository;
 import com.ruty.rutyserver.repository.MemberRepository;
 import com.ruty.rutyserver.repository.RecommendRepository;
@@ -112,13 +115,9 @@ public class RoutineServiceImpl implements RoutineService {
     @Override
     public List<TodayRoutineDto> getMyTodayRoutine(String email) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-
-        // 2. 오늘 요일 가져오기
         Week today = Week.valueOf(LocalDate.now().getDayOfWeek().name().substring(0, 3).toUpperCase());
 
-        // 3. 오늘 요일에 해당하는 루틴 조회
         List<Routine> todayRoutines = routineRepository.findTodayRoutines(member.getId(), today);
-
         // 4. DTO 변환 후 반환(종료일 초과 안된 것만 필터링) -> 배치 서버 제공시 삭제
         return todayRoutines.stream()
                 .filter(routine -> !routine.getEndDate().isBefore(LocalDate.now())) // 종료일 초과된 것 제외
@@ -136,10 +135,17 @@ public class RoutineServiceImpl implements RoutineService {
 
     @Override
     @Transactional
-    public List<RoutineDto> getMyAllRoutines(String email) {
+    public List<RoutineDto> getMyAllRoutines(String email, String category) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-        List<Routine> recommendByMember = routineRepository.findAllByMemberId(member.getId());
-        return recommendByMember.stream()
+        List<Routine> routines;
+        if(category.equals("ALL")) {
+            routines = routineRepository.findAllByMemberId(member.getId());
+        }
+        else {
+            Category value = Category.valueOf(category);
+            routines = routineRepository.findAllByMemberIdAndCategory(member.getId(), value);
+        }
+        return routines.stream()
                 .map(RoutineDto::of)
                 .collect(Collectors.toList());
     }
@@ -150,6 +156,34 @@ public class RoutineServiceImpl implements RoutineService {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         Routine routine = Routine.toEntity(routineReq, member);
         return routineRepository.save(routine).getId();
+    }
+
+    // 루틴 진행상태 변경하기: 진행중->중도포기 / 중도포기->진행중
+    @Override
+    @Transactional
+    public Long updateRoutineProgress(Long routineId) {
+        Routine routine = routineRepository.findById(routineId).orElseThrow(RoutineNotFoundException::new);
+        RoutineProgress progress = routine.getRoutineProgress();
+
+        // 종료일이 오늘을 기준으로 지나면 중도포기 상태에서 진행중으로 변경 불가
+        if (progress.equals(RoutineProgress.GIVE_UP)) {
+            if (routine.getEndDate().isBefore(LocalDate.now())) {
+                throw new RoutineProgressException();
+            }
+        }
+
+        switch (progress) {
+            case ONGOING:
+                routine.setRoutineProgress(RoutineProgress.GIVE_UP);
+                break;
+            case GIVE_UP:
+                routine.setRoutineProgress(RoutineProgress.ONGOING);
+                break;
+            default:
+                throw new RoutineProgressException();
+        }
+
+        return routineId;
     }
 
     private Long getRequiredPoints(Long level) {

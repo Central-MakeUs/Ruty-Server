@@ -1,19 +1,23 @@
 package com.ruty.rutyserver.common;
 
 import com.ruty.rutyserver.entity.CategoryLevel;
+import com.ruty.rutyserver.entity.Routine;
 import com.ruty.rutyserver.entity.e.Category;
 import com.ruty.rutyserver.entity.ImprovementGoal;
 import com.ruty.rutyserver.entity.e.SocialType;
+import com.ruty.rutyserver.entity.e.Week;
 import com.ruty.rutyserver.repository.IGRepository;
 import com.ruty.rutyserver.entity.Member;
 import com.ruty.rutyserver.entity.e.MemberRole;
 import com.ruty.rutyserver.repository.CategoryLevelRepository;
 import com.ruty.rutyserver.repository.MemberRepository;
+import com.ruty.rutyserver.repository.RoutineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Configuration
@@ -57,7 +61,60 @@ public class Dataloader {
                     CategoryLevel.builder().category(Category.MONEY).member(member).build()
             );
 
+            List<Routine> routines = List.of(
+                    Routine.builder()
+                            .title("아침 스트레칭")
+                            .description("하루를 활기차게 시작하기 위해 간단한 스트레칭을 한다.")
+                            .weeks(List.of(Week.MON, Week.WED, Week.FRI))
+                            .startDate(LocalDate.now().minusMonths(1))
+                            .endDate(LocalDate.now().plusMonths(1))
+                            .category(Category.SELFCARE)
+                            .member(member)
+                            .build(),
+
+                    Routine.builder()
+                            .title("저녁 10분 명상")
+                            .description("하루를 마무리하면서 명상으로 마음을 정리한다.")
+                            .weeks(List.of(Week.TUE, Week.THU, Week.SAT))
+                            .startDate(LocalDate.now().minusMonths(2))
+                            .endDate(LocalDate.now().plusMonths(3))
+                            .category(Category.LEISURE)
+                            .member(member)
+                            .build(),
+
+                    Routine.builder()
+                            .title("주간 가계부 정리")
+                            .description("한 주 동안 사용한 비용을 정리하고 예산을 점검한다.")
+                            .weeks(List.of(Week.SUN))
+                            .startDate(LocalDate.now().minusMonths(1))
+                            .endDate(LocalDate.now().plusMonths(2))
+                            .category(Category.MONEY)
+                            .member(member)
+                            .build(),
+
+                    Routine.builder()
+                            .title("매일 아침 물 2컵 마시기")
+                            .description("수분 보충을 위해 아침마다 물을 두 컵 마신다.")
+                            .weeks(List.of(Week.MON, Week.TUE, Week.WED, Week.THU, Week.FRI, Week.SAT, Week.SUN))
+                            .startDate(LocalDate.now().minusMonths(3))
+                            .endDate(LocalDate.now().plusMonths(3))
+                            .category(Category.SELFCARE)
+                            .member(member)
+                            .build(),
+
+                    Routine.builder()
+                            .title("집 정리하기")
+                            .description("매주 한 번씩 집을 깨끗하게 정리한다.")
+                            .weeks(List.of(Week.SAT))
+                            .startDate(LocalDate.now().minusMonths(1))
+                            .endDate(LocalDate.now().plusMonths(1))
+                            .category(Category.HOUSE)
+                            .member(member)
+                            .build()
+            );
+
             member.getCategoriesLevels().addAll(levels);
+            member.getRoutines().addAll(routines);
 
             memberRepository.save(member);
         };

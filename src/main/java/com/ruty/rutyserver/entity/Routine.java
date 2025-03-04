@@ -3,6 +3,7 @@ package com.ruty.rutyserver.entity;
 import com.ruty.rutyserver.common.BaseEntity;
 import com.ruty.rutyserver.dto.routine.RoutineReq;
 import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.RoutineProgress;
 import com.ruty.rutyserver.entity.e.Week;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,6 +16,8 @@ import org.hibernate.annotations.DynamicInsert;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.ruty.rutyserver.entity.e.RoutineProgress.ONGOING;
+
 
 @Entity
 @Table(name = "routines")
@@ -25,6 +28,7 @@ public class Routine extends BaseEntity {
 
     @PrePersist
     public void prePersist() {
+        this.routineProgress = this.routineProgress == null ? ONGOING : this.routineProgress;
         this.isDone = this.isDone == null ? false : this.isDone;
     }
 
@@ -54,13 +58,19 @@ public class Routine extends BaseEntity {
     @ColumnDefault("false")
     private Boolean isDone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @ColumnDefault("ONGOING")
+    private RoutineProgress routineProgress;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
     private Member member;
 
     public void setIsDone(Boolean isDone) {
         this.isDone = isDone;
     }
+    public void setRoutineProgress(RoutineProgress routineProgress) { this.routineProgress = routineProgress; }
 
     @Builder
     public Routine(String title, String description, List<Week> weeks,

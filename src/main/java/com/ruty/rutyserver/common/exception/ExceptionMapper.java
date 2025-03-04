@@ -27,6 +27,8 @@ public class ExceptionMapper { // 예외 객체 -> 예외 상태로 바꿔주는
     private static void setUpRoutineException() {
         mapper.put(RoutineNotFoundException.class,
                 ExceptionSituation.of("해당 루틴은 존재하지 않습니다.", HttpStatus.NOT_FOUND, 2000));
+        mapper.put(RoutineProgressException.class,
+                ExceptionSituation.of("해당 루틴은 진행 상태를 변경할 수 없습니다.", HttpStatus.CONFLICT, 2001));
     }
     private static void setUpRecommendException() {
         mapper.put(RecommendNotFoundException.class,

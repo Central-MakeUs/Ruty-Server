@@ -6,6 +6,7 @@ import com.ruty.rutyserver.dto.routine.RoutineDto;
 import com.ruty.rutyserver.dto.routine.RoutineReq;
 import com.ruty.rutyserver.dto.routine.TodayRoutineDto;
 import com.ruty.rutyserver.security.jwt.JwtUtil;
+import com.ruty.rutyserver.service.RoutineService;
 import com.ruty.rutyserver.service.RoutineServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +22,7 @@ import java.util.List;
 @RequestMapping("/api/routine")
 public class RoutineController {
 
-    private final RoutineServiceImpl routineService;
+    private final RoutineService routineService;
 
     @Operation(summary = "오늘 루틴 조회")
     @GetMapping("/today")
@@ -32,12 +33,16 @@ public class RoutineController {
         return ResponseEntity.ok(ApiResponse.ok(myTodayRoutines));
     }
 
-    @Operation(summary = "나의 루틴 전체 조회", description = "요일에 상관없이 내가 저장해둔 루틴을 전체조회함.")
+    @Operation(
+            summary = "나의 루틴 조회",
+            description = "내가 저장해둔 루틴을 전체조회함." +
+                    "<br>파라미터가 없으면 나의 루틴 전체, 파라미터를 넣으면 해당 카테고리 전체조회." +
+                    "<br>ex: ?category=HOUSE -> 나의 주거 카테고리 조회")
     @GetMapping
-    public ResponseEntity<?> getMyRoutines() {
+    public ResponseEntity<?> getMyRoutines(@RequestParam(defaultValue = "ALL") String category) {
         String email = JwtUtil.getLoginMemberEmail();
 
-        List<RoutineDto> myRoutines = routineService.getMyAllRoutines(email);
+        List<RoutineDto> myRoutines = routineService.getMyAllRoutines(email, category);
         return ResponseEntity.ok(ApiResponse.ok(myRoutines));
     }
 
@@ -92,5 +97,18 @@ public class RoutineController {
         routineService.deleteRoutine(routineId);
         return ResponseEntity.ok(ApiResponse.delete(routineId));
     }
+
+    @Operation(
+            summary = "루틴 시작/포기하기",
+            description = "내 루틴 조회 후, 아래 포기하기 버튼 클릭시 포기함." +
+                    "진행중 -> ")
+    @PutMapping("/{routineId}/state")
+    public ResponseEntity<?> changeRoutineState(@PathVariable(name = "routineId") Long routineId) {
+        String email = JwtUtil.getLoginMemberEmail();
+
+        Long updateRoutineProgress = routineService.updateRoutineProgress(routineId);
+        return ResponseEntity.ok(ApiResponse.updated(updateRoutineProgress));
+    }
+
 
 }

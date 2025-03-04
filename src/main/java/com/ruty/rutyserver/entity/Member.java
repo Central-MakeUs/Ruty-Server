@@ -49,7 +49,7 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Routine> routines = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
