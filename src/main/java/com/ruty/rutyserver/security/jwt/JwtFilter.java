@@ -1,6 +1,7 @@
 package com.ruty.rutyserver.security.jwt;
 
 import com.ruty.rutyserver.entity.Member;
+import com.ruty.rutyserver.exception.JwtException;
 import com.ruty.rutyserver.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -70,8 +71,12 @@ public class JwtFilter extends OncePerRequestFilter {
         memberRepository.findByRefreshToken(refreshToken)
                 .ifPresent(member -> {
                     String reIssuedRefreshToken = reIssueRefreshToken(member);
-                    jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getEmail()),
-                            reIssuedRefreshToken);
+                    try {
+                        jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(member.getEmail()),
+                                reIssuedRefreshToken);
+                    } catch (IOException e) {
+                        throw new JwtException();
+                    }
                 });
     }
 

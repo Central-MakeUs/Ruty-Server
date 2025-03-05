@@ -1,7 +1,7 @@
 package com.ruty.rutyserver.dto.routine;
 
 import com.ruty.rutyserver.entity.CategoryLevel;
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class CategoryLevelDto {
-    private Category category;
+    private Categories category;
     private Long level;
     private Long totalPoints;
 

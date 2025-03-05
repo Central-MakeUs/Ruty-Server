@@ -1,6 +1,6 @@
 package com.ruty.rutyserver.dto.routine;
 
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import com.ruty.rutyserver.entity.Routine;
 import com.ruty.rutyserver.entity.e.RoutineProgress;
 import com.ruty.rutyserver.entity.e.Week;
@@ -23,7 +23,7 @@ public class RoutineDto {
     private List<Week> weekList;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Category category;
+    private Categories category;
     private RoutineProgress routineProgress;
 //    private MemberInfoDto memberInfoDto;
 

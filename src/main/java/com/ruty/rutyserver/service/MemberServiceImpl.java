@@ -5,14 +5,13 @@ import com.ruty.rutyserver.dto.member.MemberInfoDto;
 import com.ruty.rutyserver.dto.member.MemberUpdateDto;
 import com.ruty.rutyserver.entity.CategoryLevel;
 import com.ruty.rutyserver.entity.Member;
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import com.ruty.rutyserver.entity.e.SocialType;
 import com.ruty.rutyserver.exception.MemberNotFoundException;
 import com.ruty.rutyserver.repository.MemberRepository;
 import com.ruty.rutyserver.repository.RecommendRepository;
 import com.ruty.rutyserver.entity.RecommendRoutine;
 import com.ruty.rutyserver.dto.recommend.RecommendRoutineDto;
-import com.ruty.rutyserver.repository.RoutineRepository;
 import com.ruty.rutyserver.security.oauth.AppleOauthMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -111,10 +110,10 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(MemberNotFoundException::new);
 
         List<CategoryLevel> levels = List.of(
-                CategoryLevel.builder().category(Category.HOUSE).member(member).build(),
-                CategoryLevel.builder().category(Category.LEISURE).member(member).build(),
-                CategoryLevel.builder().category(Category.SELFCARE).member(member).build(),
-                CategoryLevel.builder().category(Category.MONEY).member(member).build()
+                CategoryLevel.builder().category(Categories.HOUSE).member(member).build(),
+                CategoryLevel.builder().category(Categories.LEISURE).member(member).build(),
+                CategoryLevel.builder().category(Categories.SELFCARE).member(member).build(),
+                CategoryLevel.builder().category(Categories.MONEY).member(member).build()
         );
 
         member.getCategoriesLevels().addAll(levels);

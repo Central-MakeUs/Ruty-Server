@@ -3,7 +3,7 @@ package com.ruty.rutyserver.service;
 import com.ruty.rutyserver.dto.routine.*;
 import com.ruty.rutyserver.entity.CategoryLevel;
 import com.ruty.rutyserver.entity.Member;
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import com.ruty.rutyserver.entity.e.RoutineProgress;
 import com.ruty.rutyserver.entity.e.Week;
 import com.ruty.rutyserver.exception.MemberNotFoundException;
@@ -142,7 +142,7 @@ public class RoutineServiceImpl implements RoutineService {
             routines = routineRepository.findAllByMemberId(member.getId());
         }
         else {
-            Category value = Category.valueOf(category);
+            Categories value = Categories.valueOf(category);
             routines = routineRepository.findAllByMemberIdAndCategory(member.getId(), value);
         }
         return routines.stream()

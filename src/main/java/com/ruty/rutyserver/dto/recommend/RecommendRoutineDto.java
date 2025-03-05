@@ -1,6 +1,6 @@
 package com.ruty.rutyserver.dto.recommend;
 
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import com.ruty.rutyserver.entity.RecommendRoutine;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ public class RecommendRoutineDto {
     private Long id;
     private String title;
     private String description;
-    private Category category;
+    private Categories category;
 
     public static RecommendRoutineDto of(RecommendRoutine recommendRoutines) {
         return RecommendRoutineDto.builder()

@@ -1,7 +1,7 @@
 package com.ruty.rutyserver.entity;
 
 import com.ruty.rutyserver.common.BaseEntity;
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class CategoryLevel extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Category category;
+    private Categories category;
 
     @ColumnDefault("0")
     private Long level;
@@ -33,7 +33,7 @@ public class CategoryLevel extends BaseEntity {
     private Member member;
 
     @Builder
-    public CategoryLevel(Category category, Long level, Long totalPoints, Member member) {
+    public CategoryLevel(Categories category, Long level, Long totalPoints, Member member) {
         this.category = category;
         this.level = level;
         this.totalPoints = totalPoints;

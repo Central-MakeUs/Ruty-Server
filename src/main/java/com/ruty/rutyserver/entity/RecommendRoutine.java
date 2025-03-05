@@ -1,7 +1,7 @@
 package com.ruty.rutyserver.entity;
 
 import com.ruty.rutyserver.common.BaseEntity;
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,7 +23,7 @@ public class RecommendRoutine extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Category category;
+    private Categories category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -31,7 +31,7 @@ public class RecommendRoutine extends BaseEntity {
 
     @Builder
     public RecommendRoutine(String title, String description,
-                            Category category, Member member) {
+                            Categories category, Member member) {
         this.title = title;
         this.description = description;
         this.category = category;

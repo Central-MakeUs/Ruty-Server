@@ -1,13 +1,10 @@
 package com.ruty.rutyserver.security.oauth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.ruty.rutyserver.entity.CategoryLevel;
 import com.ruty.rutyserver.entity.Member;
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import com.ruty.rutyserver.entity.e.MemberRole;
 import com.ruty.rutyserver.entity.e.SocialType;
-import com.ruty.rutyserver.exception.MemberNotFoundException;
 import com.ruty.rutyserver.repository.MemberRepository;
 import com.ruty.rutyserver.security.jwt.JwtService;
 import com.ruty.rutyserver.service.MemberService;
@@ -15,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -85,10 +81,10 @@ public class OAuthLoginService {
                             .build();
 
                     List<CategoryLevel> levels = List.of(
-                            CategoryLevel.builder().category(Category.HOUSE).member(newMember).build(),
-                            CategoryLevel.builder().category(Category.LEISURE).member(newMember).build(),
-                            CategoryLevel.builder().category(Category.SELFCARE).member(newMember).build(),
-                            CategoryLevel.builder().category(Category.MONEY).member(newMember).build()
+                            CategoryLevel.builder().category(Categories.HOUSE).member(newMember).build(),
+                            CategoryLevel.builder().category(Categories.LEISURE).member(newMember).build(),
+                            CategoryLevel.builder().category(Categories.SELFCARE).member(newMember).build(),
+                            CategoryLevel.builder().category(Categories.MONEY).member(newMember).build()
                     );
 
                     newMember.getCategoriesLevels().addAll(levels);

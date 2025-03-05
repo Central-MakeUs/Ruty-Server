@@ -1,16 +1,21 @@
 package com.ruty.rutyserver.security.jwt;
 
+import com.ruty.rutyserver.common.exception.ExceptionSituation;
 import com.ruty.rutyserver.repository.MemberRepository;
+import com.ruty.rutyserver.security.oauth.JwtDto;
+import com.ruty.rutyserver.util.HttpResponseUtil;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Optional;
@@ -80,11 +85,10 @@ public class JwtService {
     /**
      * AccessToken + RefreshToken 헤더에 실어서 보내기
      */
-    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        setAccessTokenHeader(response, accessToken);
-        setRefreshTokenHeader(response, refreshToken);
+    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken)
+            throws IOException {
+        JwtDto jwtDto = new JwtDto(accessToken, refreshToken);
+        HttpResponseUtil.setSuccessResponse(response,HttpStatus.OK, jwtDto);
         log.info("Access Token, Refresh Token 헤더 설정 완료");
     }
 

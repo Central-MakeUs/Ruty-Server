@@ -2,7 +2,7 @@ package com.ruty.rutyserver.entity;
 
 import com.ruty.rutyserver.common.BaseEntity;
 import com.ruty.rutyserver.dto.routine.RoutineReq;
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import com.ruty.rutyserver.entity.e.RoutineProgress;
 import com.ruty.rutyserver.entity.e.Week;
 import jakarta.persistence.*;
@@ -18,9 +18,8 @@ import java.util.List;
 
 import static com.ruty.rutyserver.entity.e.RoutineProgress.ONGOING;
 
-
 @Entity
-@Table(name = "routines")
+@Table(name = "routines")  // 테이블 이름에 백틱 추가
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
@@ -32,26 +31,29 @@ public class Routine extends BaseEntity {
         this.isDone = this.isDone == null ? false : this.isDone;
     }
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "routines_id")
+    @Column(name = "routine_id")  // 컬럼 이름에 백틱 추가
     private Long id;
 
     private String title;
 
     private String description;
 
-    @ElementCollection(fetch = FetchType.EAGER) // 루틴 조회할때 대부분 꼭 조회해야하기에 그냥 eager이 나을듯
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "routine_weeks", joinColumns = @JoinColumn(name = "routines_id"))
-    @Enumerated(EnumType.STRING) // Enum 값을 문자열로 저장 (또는 ORDINAL 사용 가능)
+    @Enumerated(EnumType.STRING)
     private List<Week> weeks;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Category category;
+    private Categories category;
 
+    @Column(name = "`start_date`")
     private LocalDate startDate;
 
+    @Column(name = "`end_date`")
     private LocalDate endDate;
 
     @Column(nullable = false)
@@ -60,13 +62,12 @@ public class Routine extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @ColumnDefault("ONGOING")
+    @ColumnDefault("'ONGOING'")
     private RoutineProgress routineProgress;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")  // 외래 키에 백틱 추가
     private Member member;
-
     public void setIsDone(Boolean isDone) {
         this.isDone = isDone;
     }
@@ -75,7 +76,7 @@ public class Routine extends BaseEntity {
     @Builder
     public Routine(String title, String description, List<Week> weeks,
                    LocalDate startDate, LocalDate endDate,
-                   Category category, Member member) {
+                   Categories category, Member member) {
         this.title = title;
         this.description = description;
         this.weeks = weeks;

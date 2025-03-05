@@ -1,7 +1,7 @@
 package com.ruty.rutyserver.entity;
 
 import com.ruty.rutyserver.common.BaseEntity;
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,13 +18,13 @@ public class ImprovementGoal extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Category category;
+    private Categories category;
 
     @Column(nullable = false)
     private String content;
 
     @Builder
-    public ImprovementGoal(Category category, String content) {
+    public ImprovementGoal(Categories category, String content) {
         this.category = category;
         this.content = content;
     }

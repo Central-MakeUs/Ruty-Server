@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Category {
+public enum Categories {
     HOUSE("HOUSE"),
     LEISURE("LEISURE"),
     SELFCARE("SELFCARE"),

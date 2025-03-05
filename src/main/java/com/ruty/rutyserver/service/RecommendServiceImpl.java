@@ -3,7 +3,7 @@ package com.ruty.rutyserver.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ruty.rutyserver.entity.e.Category;
+import com.ruty.rutyserver.entity.e.Categories;
 import com.ruty.rutyserver.entity.Member;
 import com.ruty.rutyserver.entity.RecommendRoutine;
 import com.ruty.rutyserver.exception.MemberNotFoundException;
@@ -122,7 +122,7 @@ public class RecommendServiceImpl implements RecommendService{
                     .map(node -> new RecommendRoutine(
                             node.get("title").asText(),
                             node.get("description").asText(),
-                            Category.valueOf(node.get("category").asText()),
+                            Categories.valueOf(node.get("category").asText()),
                             member
                     ))
                     .collect(Collectors.toList());

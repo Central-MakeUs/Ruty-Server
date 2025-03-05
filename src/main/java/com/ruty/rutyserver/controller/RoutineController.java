@@ -101,8 +101,8 @@ public class RoutineController {
     @Operation(
             summary = "루틴 시작/포기하기",
             description = "내 루틴 조회 후, 아래 포기하기 버튼 클릭시 포기함." +
-                    "진행중 -> ")
-    @PutMapping("/{routineId}/state")
+                    "<br>진행중 -> 중도포기 or 중도포기 -> 진행중")
+    @PutMapping("/{routineId}/progress")
     public ResponseEntity<?> changeRoutineState(@PathVariable(name = "routineId") Long routineId) {
         String email = JwtUtil.getLoginMemberEmail();
 

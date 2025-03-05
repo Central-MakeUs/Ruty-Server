@@ -1,16 +1,11 @@
 package com.ruty.rutyserver.dto.routine;
 
-import com.ruty.rutyserver.entity.Member;
 import com.ruty.rutyserver.entity.Routine;
-import com.ruty.rutyserver.entity.e.Category;
-import com.ruty.rutyserver.entity.e.Week;
+import com.ruty.rutyserver.entity.e.Categories;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @NoArgsConstructor @AllArgsConstructor
@@ -18,7 +13,7 @@ import java.util.List;
 public class TodayRoutineDto {
     private Long routineId;
     private String title;
-    private Category category;
+    private Categories category;
     private boolean isDone;
 
     public static TodayRoutineDto of(Routine routine) {
