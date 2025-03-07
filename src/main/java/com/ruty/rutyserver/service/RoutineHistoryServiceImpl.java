@@ -50,14 +50,24 @@ public class RoutineHistoryServiceImpl implements RoutineHistoryService{
         List<RoutineHistory> routineHistories = routineHistoryRepository.findAllByRoutineId(routineId);
         routineHistories.sort(Comparator.comparing(RoutineHistory::getDate).reversed()); // 최신순 정렬
 
-        long totalCount = routineHistories.size();
+        Routine routine = routineRepository.findById(routineId).orElseThrow(RoutineNotFoundException::new);
+        List<Week> activeDays = routine.getWeeks(); // 사용자가 설정한 수행 요일
+        LocalDate startDate = routine.getStartDate();
+        LocalDate endDate = routine.getEndDate();
+
+        long totalCount = 0;
+        LocalDate currentDate = startDate;
+        while (!currentDate.isAfter(endDate)) { // 종료일 이후가 아닐 때까지 반복
+            if (activeDays.contains(Week.fromDayOfWeek(currentDate.getDayOfWeek()))) {
+                totalCount++;
+            }
+            currentDate = currentDate.plusDays(1);
+        }
+
         long completedCount = routineHistories.stream()
                 .filter(RoutineHistory::getIsDone)
                 .count();
         long streakCount = 0;
-
-        Routine routine = routineRepository.findById(routineId).orElseThrow(RoutineNotFoundException::new);
-        List<Week> activeDays = routine.getWeeks(); // 사용자가 설정한 수행 요일
 
         if(routine.getIsDone()) {
             totalCount++;
