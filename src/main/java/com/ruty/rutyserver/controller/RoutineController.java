@@ -104,8 +104,6 @@ public class RoutineController {
                     "<br>진행중 -> 중도포기 or 중도포기 -> 진행중")
     @PutMapping("/{routineId}/progress")
     public ResponseEntity<?> changeRoutineState(@PathVariable(name = "routineId") Long routineId) {
-        String email = JwtUtil.getLoginMemberEmail();
-
         Long updateRoutineProgress = routineService.updateRoutineProgress(routineId);
         return ResponseEntity.ok(ApiResponse.updated(updateRoutineProgress));
     }

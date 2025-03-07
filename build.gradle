@@ -59,7 +59,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-devtools'
 
     // batch
-
+//    implementation 'org.springframework.boot:spring-boot-starter-batch'
 
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

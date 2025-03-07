@@ -3,14 +3,14 @@ package com.ruty.rutyserver.entity;
 import com.ruty.rutyserver.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
-@Entity
-@Table(name = "recommend_routines")
+@Table(name = "routine_history")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoutineHistory extends BaseEntity {
@@ -21,7 +21,7 @@ public class RoutineHistory extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
-    private Member user;
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "routine_id", nullable = false)
@@ -31,5 +31,14 @@ public class RoutineHistory extends BaseEntity {
     private LocalDate date;
 
     @Column(nullable = false)
-    private boolean isDone;
+    private Boolean isDone;
+
+    @Builder
+    public RoutineHistory (Member member, Routine routine, LocalDate date, Boolean isDone) {
+        this.member = member;
+        this.routine = routine;
+        this.date = date;
+        this.isDone = isDone;
+    }
+
 }

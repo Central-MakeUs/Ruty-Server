@@ -1,22 +1,23 @@
 package com.ruty.rutyserver.common;
 
-import com.ruty.rutyserver.entity.CategoryLevel;
-import com.ruty.rutyserver.entity.Routine;
+import com.ruty.rutyserver.entity.*;
 import com.ruty.rutyserver.entity.e.Categories;
-import com.ruty.rutyserver.entity.ImprovementGoal;
 import com.ruty.rutyserver.entity.e.SocialType;
 import com.ruty.rutyserver.entity.e.Week;
 import com.ruty.rutyserver.repository.IGRepository;
-import com.ruty.rutyserver.entity.Member;
 import com.ruty.rutyserver.entity.e.MemberRole;
 import com.ruty.rutyserver.repository.MemberRepository;
+import com.ruty.rutyserver.repository.RoutineHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,7 +25,8 @@ public class Dataloader {
 
     @Bean
     public CommandLineRunner loadTestData(IGRepository igRepository,
-                                          MemberRepository memberRepository) {
+                                          MemberRepository memberRepository,
+                                          RoutineHistoryRepository routineHistoryRepository) {
         return args -> {
             // ImprovementGoals 엔티티를 리스트에 추가
             List<ImprovementGoal> goals = List.of(
@@ -48,7 +50,7 @@ public class Dataloader {
                     .socialType(SocialType.GOOGLE)
                     .role(MemberRole.ROLE_MEMBER)
                     .isAgree(true)
-                    .refreshToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJpYXQiOjE3MzgyNDgxMzksImV4cCI6MTczOTQ1NzczOX0.UOnjMkHLblOjvkJhekknanHv90W06K6LKiexNtQtD1c")
+                    .refreshToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJpYXQiOjE3MzgyNDgxMzksImV4cCI6MTc0MzI4MzE5OX0.m1fLfxzsREy0OBasiBam8NjvExTOeTbVj0b0xP_NzrI")
                     .build();
 
 
@@ -115,6 +117,34 @@ public class Dataloader {
             member.getRoutines().addAll(routines);
 
             memberRepository.save(member);
+            Routine routine = routines.get(0);
+            List<LocalDate> validDates = new ArrayList<>();
+            LocalDate today = LocalDate.now();
+            while (validDates.size() < 10) {
+                if (today.getDayOfWeek() == DayOfWeek.MONDAY ||
+                        today.getDayOfWeek() == DayOfWeek.WEDNESDAY ||
+                        today.getDayOfWeek() == DayOfWeek.FRIDAY) {
+                    validDates.add(today);
+                }
+                today = today.minusDays(1);
+            }
+
+            Random random = new Random();
+            List<RoutineHistory> routineHistories = new ArrayList<>();
+            for (int i = 0; i < validDates.size(); i++) {
+                boolean isDone = i < 7 || random.nextBoolean(); // 7개는 true, 나머지는 랜덤
+                routineHistories.add(
+                        RoutineHistory.builder()
+                                .member(member)
+                                .routine(routine)
+                                .date(validDates.get(i))
+                                .isDone(isDone)
+                                .build()
+                );
+            }
+
+            routineHistoryRepository.saveAll(routineHistories);
+
         };
     }
 }

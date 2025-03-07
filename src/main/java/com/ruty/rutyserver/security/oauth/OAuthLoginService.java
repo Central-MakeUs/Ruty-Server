@@ -46,7 +46,8 @@ public class OAuthLoginService {
         Map<String, Object> memberInfo;
         if(socialType.equals(SocialType.GOOGLE)) {
             memberInfo = googleOauthMember.getAccessToken(socialType, socialLoginDto.getPlatformType(), socialLoginDto.getCode());
-        } else {
+        }
+        else {
             resourceServerAccessToken = appleOauthMember.getAccessToken(socialType, socialLoginDto.getCode());
             memberInfo = appleOauthMember.getMemberInfo(socialType.getValue(), resourceServerAccessToken);
         }
@@ -95,8 +96,6 @@ public class OAuthLoginService {
         // 영속 상태 보장된 member에서 categoriesLevels 가져오기
 //        member = memberRepository.findById(member.getId()).orElseThrow(MemberNotFoundException::new);
 
-
-
-        return new JwtDto(accessToken, refreshToken);
+        return new JwtDto(accessToken, member.getRefreshToken());
     }
 }

@@ -23,9 +23,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class RoutineServiceImpl implements RoutineService {
     private final RoutineRepository routineRepository;
     private final MemberRepository memberRepository;
@@ -121,6 +121,7 @@ public class RoutineServiceImpl implements RoutineService {
         // 4. DTO 변환 후 반환(종료일 초과 안된 것만 필터링) -> 배치 서버 제공시 삭제
         return todayRoutines.stream()
                 .filter(routine -> !routine.getEndDate().isBefore(LocalDate.now())) // 종료일 초과된 것 제외
+                .filter(routine -> !routine.getRoutineProgress().equals(RoutineProgress.GIVE_UP))
                 .map(TodayRoutineDto::of)
                 .collect(Collectors.toList());
     }
@@ -165,8 +166,10 @@ public class RoutineServiceImpl implements RoutineService {
         Routine routine = routineRepository.findById(routineId).orElseThrow(RoutineNotFoundException::new);
         RoutineProgress progress = routine.getRoutineProgress();
 
+
+
         // 종료일이 오늘을 기준으로 지나면 중도포기 상태에서 진행중으로 변경 불가
-        if (progress.equals(RoutineProgress.GIVE_UP)) {
+        if (progress.equals(RoutineProgress.GIVE_UP) && routine.getEndDate() != null) {
             if (routine.getEndDate().isBefore(LocalDate.now())) {
                 throw new RoutineProgressException();
             }
@@ -183,7 +186,7 @@ public class RoutineServiceImpl implements RoutineService {
                 throw new RoutineProgressException();
         }
 
-        return routineId;
+        return routine.getId();
     }
 
     private Long getRequiredPoints(Long level) {
