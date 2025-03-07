@@ -37,21 +37,21 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application-ai.yml
-          echo "${{ secrets.AI_YML }}" >> ./application-ai.yml
+          echo "${{ secrets.AI_YML }}" > ./application-ai.yml
         shell: bash
 
       - name: make application-jwt.yml
         run: |
           cd ./src/main/resources
           touch ./application-jwt.yml
-          echo "${{ secrets.JWT_YML }}" >> ./application-jwt.yml
+          echo "${{ secrets.JWT_YML }}" > ./application-jwt.yml
         shell: bash
 
       - name: make application-oauth.yml
         run: |
           cd ./src/main/resources
           touch ./application-oauth.yml
-          echo "${{ secrets.OAUTH_YML }}" >> ./application-oauth.yml
+          echo "${{ secrets.OAUTH_YML }}" > ./application-oauth.yml
         shell: bash
 
       # Build 파일 생성하기
