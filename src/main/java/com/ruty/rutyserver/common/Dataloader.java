@@ -102,6 +102,7 @@ public class Dataloader {
                             .member(member)
                             .build(),
 
+
                     Routine.builder()
                             .title("집 정리하기")
                             .description("매주 한 번씩 집을 깨끗하게 정리한다.")
