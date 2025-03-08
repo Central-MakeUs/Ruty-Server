@@ -68,6 +68,10 @@ public class Routine extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")  // 외래 키에 백틱 추가
     private Member member;
+
+    @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoutineHistory> routineHistoryList;
+
     public void setIsDone(Boolean isDone) {
         this.isDone = isDone;
     }
