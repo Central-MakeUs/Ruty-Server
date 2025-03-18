@@ -14,11 +14,9 @@ import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
 
 @Configuration
@@ -36,7 +34,7 @@ public class YesterdayBatchItem {
         return new RepositoryItemReaderBuilder<Routine>()
                 .name("yesterdayReader")
                 .pageSize(10)
-                .methodName("findAllByDateAndDayOfWeek")
+                .methodName("findAllByDateAndDayOfWeek") //
                 .arguments(Arrays.asList(yesterday, week)) // 날짜와 요일을 넘김
                 .repository(routineRepository)
                 .sorts(Map.of("id", Sort.Direction.ASC)) // id기반으로 정렬해서 데이터가 꼬이지 않도록 함.
@@ -48,7 +46,6 @@ public class YesterdayBatchItem {
 
         return new ItemProcessor<Routine, RoutineHistory>() {
             @Override
-            @Transactional
             public RoutineHistory process(Routine item) throws Exception {
                 RoutineHistory routineHistory = RoutineHistory.builder()
                         .member(item.getMember())
@@ -58,6 +55,7 @@ public class YesterdayBatchItem {
                         .build();
 
                 item.setIsDone(false);
+                routineRepository.save(item);
                 return routineHistory;
             }
         };

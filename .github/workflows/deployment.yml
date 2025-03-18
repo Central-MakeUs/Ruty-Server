@@ -33,6 +33,7 @@ jobs:
 
       # application-database.yml 파일 생성
       # GitHub-Actions 에서 설정한 값을 application-database.yml 파일에 쓰기
+
       - name: make application-ai.yml
         run: |
           cd ./src/main/resources

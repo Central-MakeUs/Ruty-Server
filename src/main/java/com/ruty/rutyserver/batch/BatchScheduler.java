@@ -1,6 +1,7 @@
 package com.ruty.rutyserver.batch;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.configuration.JobRegistry;
@@ -17,7 +18,8 @@ public class BatchScheduler {
     private final JobLauncher jobLauncher;
     private final JobRegistry jobRegistry;
 
-    @Scheduled(cron = "10 * * * * *", zone = "Asia/Seoul")
+//    @Scheduled(cron = "5 * * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "* 0 0 * * *", zone = "Asia/Seoul")  // 매일 00:00:05 실행
     public void runYesterdayJob() throws Exception {
         System.out.println("first schedule start");
 
@@ -27,6 +29,7 @@ public class BatchScheduler {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("date", date)
                 .toJobParameters();
+
 
         jobLauncher.run(jobRegistry.getJob("yesterdayJob"), jobParameters);
     }
