@@ -2,7 +2,6 @@ package com.ruty.rutyserver.controller;
 
 import com.ruty.rutyserver.common.ApiResponse;
 import com.ruty.rutyserver.security.oauth.JwtDto;
-import com.ruty.rutyserver.entity.e.SocialType;
 import com.ruty.rutyserver.security.oauth.OAuthLoginService;
 import com.ruty.rutyserver.security.oauth.SocialLoginDto;
 import io.swagger.v3.oas.annotations.tags.Tag;

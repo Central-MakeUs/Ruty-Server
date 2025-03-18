@@ -1,10 +1,7 @@
 package com.ruty.rutyserver.security.oauth;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ruty.rutyserver.entity.e.SocialType;
-import com.ruty.rutyserver.repository.MemberRepository;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;

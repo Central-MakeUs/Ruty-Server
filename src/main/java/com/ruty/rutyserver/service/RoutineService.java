@@ -1,17 +1,8 @@
 package com.ruty.rutyserver.service;
 
 import com.ruty.rutyserver.dto.routine.*;
-import com.ruty.rutyserver.entity.CategoryLevel;
-import com.ruty.rutyserver.entity.Member;
-import com.ruty.rutyserver.entity.Routine;
-import com.ruty.rutyserver.entity.e.Week;
-import com.ruty.rutyserver.exception.MemberNotFoundException;
-import com.ruty.rutyserver.exception.RoutineNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public interface RoutineService {
     List<CategoryLevelInfoDto> getAllCategoryLevels();

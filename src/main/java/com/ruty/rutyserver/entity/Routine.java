@@ -41,7 +41,7 @@ public class Routine extends BaseEntity {
 
     private String description;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "routine_weeks", joinColumns = @JoinColumn(name = "routines_id"))
     @Enumerated(EnumType.STRING)
     private List<Week> weeks;
@@ -79,7 +79,7 @@ public class Routine extends BaseEntity {
 
     @Builder
     public Routine(String title, String description, List<Week> weeks,
-                   LocalDate startDate, LocalDate endDate,
+                   LocalDate startDate, LocalDate endDate, Boolean isDone,
                    Categories category, Member member) {
         this.title = title;
         this.description = description;
@@ -87,6 +87,7 @@ public class Routine extends BaseEntity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.category = category;
+        this.isDone = isDone;
         this.member = member;
     }
 
