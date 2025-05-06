@@ -25,6 +25,7 @@ Ruty API Server는 **사용자 친화적인 API 서비스**를 제공하는 프�
   수정이 완료되면 `main` 브랜치와 `dev` 브랜치에 병합합니다.
 
 ---
+<img width="1470" alt="스크린샷 2025-04-28 오후 7 29 59" src="https://github.com/user-attachments/assets/1e2a2693-ba0c-4ddc-b442-66b68ac07746" />
 
 ## 🌐 서버 운영 계획
 
